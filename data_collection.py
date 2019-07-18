@@ -14,6 +14,10 @@ def main():
     wlan_mac = get_mac_address(interface="wlan0")
     
     print("My MAC Address is " + wlan_mac)
+    
+    print(os.stat("/media/data"))
+    
+    
 
 if __name__ == "__main__":
     main()
