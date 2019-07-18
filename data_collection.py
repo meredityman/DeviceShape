@@ -11,9 +11,9 @@ def main():
         for row in spamreader:
             print(', '.join(row))
             
-    ip_mac = get_mac_address(ip="10.0.0.1", network_request=True)
+    wlan_mac = get_mac_address(interface="wlan0")
     
-    print("My MAC Address is " + ip_mac)
+    print("My MAC Address is " + wlan_mac)
 
 if __name__ == "__main__":
     main()
