@@ -11,7 +11,7 @@ def main():
         for row in spamreader:
             print(', '.join(row))
             
-    ip_mac = get_mac_address(ip="192.168.0.1")
+    ip_mac = get_mac_address(ip="10.0.0.1", network_request=True)
     
     print("My MAC Address is " + ip_mac)
 
