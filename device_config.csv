@@ -1,5 +1,5 @@
 ID,Color,MAC Address,IP,User,Pw
-1,Red,B8-27-EB-F5-5D-6A,192.168.0.100 ,pi,raspberry
+1,Red,B8-27-EB-F5-5D-6A,192.168.0.100,pi,raspberry
 2,Orange,,,pi,raspberry
 3,Yellow,,,pi,raspberry
 4,Chartreuse,,,pi,raspberry
