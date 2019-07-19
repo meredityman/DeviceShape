@@ -12,9 +12,7 @@ class OSCComunication:
         self.in_port = in_port
         self.status  = status
         self.host_ip = host_ip
-
-        self.dispatcher = Dispatcher()
-        
+       
         self._setup_server()
     
     def close(self):
@@ -60,18 +58,20 @@ class OSCComunication:
     def _setup_server(self):
         print("Setting up server {}, {}".format(self.host_ip, self.in_port))
 
-        self.server = BlockingOSCUDPServer((self.host_ip, self.in_port), dispatcher)
+        self.dispatcher = Dispatcher()
         
-        dispatcher.map("/handshake/", self._handshake_handler) 
-        dispatcher.map("/ping/"     , self._ping_handler )
-        dispatcher.map("/start/"    , self._start_handler)
-        dispatcher.map("/stop/"     , self._stop_handler )
+        self.server = BlockingOSCUDPServer((self.host_ip, self.in_port), self.dispatcher)
+        
+        self.dispatcher.map("/handshake/", self._handshake_handler) 
+        self.dispatcher.map("/ping/"     , self._ping_handler )
+        self.dispatcher.map("/start/"    , self._start_handler)
+        self.dispatcher.map("/stop/"     , self._stop_handler )
         
                 
     def _handshake_handler(self, address, osc_arguments):
         if(self.target_ip != "") : return
         
-        self.target_ip = info[0]
+        self.target_ip = "192.168.0.199"
         self.out_port  = int(args[0])
         
         print("Handshake received. IP: {} PORT: {}".format(
