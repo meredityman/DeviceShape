@@ -43,9 +43,9 @@ def update_status(status):
     
     total, used, free = shutil.disk_usage(data_path)
     
-    status["total"]  = total
-    status["used"]   = used
-    status["free"]   = free
+    status["total"]  = float(total)
+    status["used"]   = float(used)
+    status["free"]   = float(free)
     status["random"] = random.random()
 
 def main():
@@ -60,7 +60,7 @@ def main():
     i = 0
     while(i < 1000):
         i = i + 1
-        #time.sleep(1)
+        time.sleep(1)
         update_status(status);
         oscComunication.update()
 

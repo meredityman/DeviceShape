@@ -16,16 +16,15 @@ class OSCComunication:
         self._setup_server()
     
     def close(self):
-        print("Exit")
         self._send_exit()
     
     def update(self):
-        server.handle_request()
+        self.server.handle_request()
         
         if(self.client == None):
             return
             
-        self._ping()
+        self._send_ping()
         self._send_status()
 
     def send(self, address, args):
@@ -33,11 +32,11 @@ class OSCComunication:
             return
             
         print(address)
-        self.client(address, args)
+        print(args)
+        self.client.send_message(address, args)
             
     
-    def _ping(self):
-        print("Ping")
+    def _send_ping(self):
         self.send("/ping/", [ self.ping_num ])
         self.ping_num = self.ping_num + 1
 
@@ -48,8 +47,8 @@ class OSCComunication:
         print("Sending status")
         
         for key, value in self.status.items():
-            address = "/status/" + key + "/"
-            self.send(address, [ value ])
+            address = "/status/" + key
+            self.send(address, value)
             
     def _setup_sender(self):
         print("Setting up client {}, {}".format(self.target_ip, self.out_port))
@@ -72,12 +71,13 @@ class OSCComunication:
         if(self.target_ip != "") : return
         
         self.target_ip = "192.168.0.199"
-        self.out_port  = int(args[0])
+        self.out_port  = osc_arguments
         
         print("Handshake received. IP: {} PORT: {}".format(
             self.target_ip, 
             self.out_port  ))
-            
+        
+        self.dispatcher.unmap("/handshake/", self._handshake_handler)
         self._setup_sender()
             
 
