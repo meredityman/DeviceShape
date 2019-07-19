@@ -18,17 +18,19 @@ def get_host_name_IP():
 class OSCComunication:
     target_ip = ""
 
-    def __init__(
+    def __init__(self,
         in_port     = 3821, 
         out_port    = 2881
     ):
         self.in_port  = in_port
         self.out_port = out_port
         
-        osc_startup()  
-        if( host_ip = get_host_name_IP() ) : 
+        osc_startup()
+
+        self.host_ip = get_host_name_IP()
+        if( self.host_ip ) : 
                   
-            _setup_receiver()
+            self._setup_receiver()
     
 
     def send(self, msg):
@@ -45,11 +47,11 @@ class OSCComunication:
         #msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
         #osc_send(msg, "sender")
             
-    def _setup_receiver(self):
+    def _setup_sender(self):
         osc_udp_server(self.target_ip, self.out_port, "aservername")
         
-    def _setup_sender(self):
-        osc_udp_server(get_Host_name_IP(), self.in_port , "receiver") # Reciver
+    def _setup_receiver(self):
+        osc_udp_server(self.host_ip, self.in_port , "receiver") # Reciver
         
         osc_method("/handshake/"  , self._handshake_handler )
         osc_method("/ping/"       , self._ping_handler )

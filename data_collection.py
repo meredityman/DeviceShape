@@ -2,6 +2,8 @@ import os
 import csv
 import shutil
 from getmac import get_mac_address
+from OSCManager  import *
+
 
 data_path = "/media/data"
 
@@ -32,7 +34,7 @@ def setup():
     pass
 
 def loop():
-    pass:
+    pass
     
     
 
