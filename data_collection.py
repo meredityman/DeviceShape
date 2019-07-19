@@ -39,7 +39,7 @@ def get_config_data():
     raise Exception("Entry for this device not found") 
 
 def update_status(status):
-    print(os.stat(data_path))
+    #print(os.stat(data_path))
     
     total, used, free = shutil.disk_usage(data_path)
     
@@ -57,11 +57,14 @@ def main():
     update_status(status);
     oscComunication = OSCComunication(config_data["IP"], status)
 
-    while(True):
-        time.sleep(1)
+    i = 0
+    while(i < 1000):
+        i = i + 1
+        #time.sleep(1)
         update_status(status);
         oscComunication.update()
-    
+
+    oscComunication.close()
     print("End")
 
 def setup():

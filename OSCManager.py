@@ -1,10 +1,11 @@
-from osc4py3.as_eventloop import *
+from osc4py3.as_comthreads import *
 from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
 import time
 
 class OSCComunication:
     target_ip = ""
+    ping_num  = 0
 
     def __init__(self, host_ip, status, in_port = 3821):
         self.in_port = in_port
@@ -14,7 +15,11 @@ class OSCComunication:
         osc_startup()
         self._setup_receiver()
     
-    def __del__(self):
+    def close(self):
+        print("Exit")
+        self._send_exit()
+        osc_process()
+        time.sleep(3)
         osc_terminate()
     
     def update(self):
@@ -28,27 +33,33 @@ class OSCComunication:
 
     def send(self, msg):
         if(self.target_ip != ""):
+            print(msg)
             osc_send(msg, "sender")
             
     
     def _ping(self):
         print("Ping")
-        msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
+        msg = oscbuildparse.OSCMessage("/ping/", None, [ self.ping_num ])
+        self.send(msg)
+        self.ping_num = self.ping_num + 1
+
+    def _send_exit(self):
+        msg = oscbuildparse.OSCMessage("/exit/", None, [ True ])
         self.send(msg)
         
     def _send_status(self):
+        print("Sending status")
         
         messages = []
-        for key, value in status.items():
-            address = "/status/" + key
-            msg = oscbuildparse.OSCMessage("address", None, [ value ]) 
+        for key, value in self.status.items():
+            address = "/status/" + key + "/"
+            print(address + ": " + str(value))
+            msg = oscbuildparse.OSCMessage(address, None, [ value ]) 
+            #self.send(msg)
             messages.append(msg)
-            
-        exectime = time.time()
-            
-        bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(exectime), messages)
-        
-        send(bun)
+
+        bundle = oscbuildparse.OSCBundle(oscbuildparse.OSC_IMMEDIATELY, messages)
+        self.send(bundle)
             
     def _setup_sender(self):
         print("Setting up sender {}, {}".format(self.target_ip, self.out_port))
