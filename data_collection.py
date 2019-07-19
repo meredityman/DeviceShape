@@ -59,12 +59,10 @@ def main():
     
     oscComunication = OSCComunication(config_data["IP"])
 
-    #while(True):
-    #    time.sleep(1)
-    #    print("Here")
-    #    oscComunication.update()
-    #
-    #print("End")
+    while(True):
+        oscComunication.update()
+    
+    print("End")
 
 def setup():
     pass
