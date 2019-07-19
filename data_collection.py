@@ -49,7 +49,8 @@ def update_status(status):
     status["free"]   = free
     status["random"] = random.random()
 
-def main():
+
+async def main():
     global status, oscComunication
     
     config_data = get_config_data()
@@ -64,7 +65,8 @@ def main():
     
     print("End")
  
-def loop():
+
+async def loop():
     global status, oscComunication
 
     while(True):
