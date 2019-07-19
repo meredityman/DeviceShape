@@ -24,12 +24,6 @@ def get_config_data():
     with open(config_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         
-        
-        
-        #for field in field_names:
-        #    if(field not in reader.keys()):
-        #        raise Exception("CSV does not contain " + field) 
-        
         for row in reader:
             print(row.keys())
 
@@ -43,20 +37,20 @@ def get_config_data():
     
     raise Exception("Entry for this device not found") 
 
+def get_status():
+    print(os.stat(data_path))
+    
+    total, used, free = shutil.disk_usage(data_path)
+    
+    print("total: %d gb" % (total // (2**30)))
+    print("used: %d gb" % (used // (2**30)))
+    print("free: %d gb" % (free // (2**30)))
+
 def main():
     print("Hello world")
     
     config_data = get_config_data()
 
-    #print(os.stat(data_path))
-    
-    #total, used, free = shutil.disk_usage(data_path)
-    #
-    #print("Total: %d GB" % (total // (2**30)))
-    #print("Used: %d GB" % (used // (2**30)))
-    #print("Free: %d GB" % (free // (2**30)))
-    
-    
     oscComunication = OSCComunication(config_data["IP"])
 
     while(True):
