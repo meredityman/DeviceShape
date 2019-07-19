@@ -25,17 +25,18 @@ class OSCComunication:
     def update(self):
         osc_process()
         
-        if(target_ip == ""):
+        if(self.target_ip == ""):
             return
         else:
-            ping()
+            self.ping()
 
     def send(self, msg):
-        if(found_master):
+        if(self.target_ip != ""):
             osc_send(msg, "server")
             
     
     def ping(self):
+        print("Ping")
         msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
         self.send(msg)
         
@@ -45,6 +46,7 @@ class OSCComunication:
         #osc_send(msg, "sender")
             
     def _setup_sender(self):
+        print("Setting up sender {}, {}".format(self.target_ip, self.out_port))
         osc_udp_server(self.target_ip, self.out_port, "server")
         
     def _setup_receiver(self):
@@ -69,18 +71,18 @@ class OSCComunication:
         osc_method("/stop/"       , self._stop_handler )
         
     def _all_message_handler(self, adr):
-        print(adr)
+        #print(adr)
         pass
                 
     def _handshake_handler(self, info, *args):
-        if(self.target_ip == "") : pass
+        if(self.target_ip != "") : return
         
         self.target_ip = info[0]
-        self.out_port  = int(info[1])
+        self.out_port  = int(args[0])
         
         print("Handshake received. IP: {} PORT: {}".format(
-            self.target_ip 
-            self.out_port  )
+            self.target_ip, 
+            self.out_port  ))
             
         self._setup_sender()
             

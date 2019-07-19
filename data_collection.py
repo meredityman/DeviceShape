@@ -54,6 +54,8 @@ def main():
     oscComunication = OSCComunication(config_data["IP"])
 
     while(True):
+        time.sleep(1)
+
         oscComunication.update()
     
     print("End")
