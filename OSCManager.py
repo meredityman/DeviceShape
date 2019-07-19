@@ -68,7 +68,7 @@ class OSCComunication:
         dispatcher.map("/stop/"     , self._stop_handler )
         
                 
-    def _handshake_handler(self, address: str, *osc_arguments: List[Any]) -> None:
+    def _handshake_handler(self, address, osc_arguments):
         if(self.target_ip != "") : return
         
         self.target_ip = info[0]
@@ -81,12 +81,12 @@ class OSCComunication:
         self._setup_sender()
             
 
-    def _ping_handler(self, address: str, *osc_arguments: List[Any]) -> None:
+    def _ping_handler(self, address, osc_arguments):
         print("Ping received")
         pass
         
-    def _start_handler(self, address: str, *osc_arguments: List[Any]) -> None:
+    def _start_handler(self, address, osc_arguments):
         pass
         
-    def _stop_handler(self, address: str, *osc_arguments: List[Any]) -> None:
+    def _stop_handler(self, address, osc_arguments):
         pass
