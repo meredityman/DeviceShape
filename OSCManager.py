@@ -1,4 +1,4 @@
-from osc4py3.as_comthreads import *
+from osc4py3.as_eventloop import *
 from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
 import time
