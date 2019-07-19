@@ -40,13 +40,13 @@ def get_config_data():
     raise Exception("Entry for this device not found") 
 
 def update_status(status):
-    print(os.stat(data_path))
+    #print(os.stat(data_path))
     
     total, used, free = shutil.disk_usage(data_path)
     
-    status["total"]  = total
-    status["used"]   = used
-    status["free"]   = free
+    status["total"]  = float(total)
+    status["used"]   = float(used)
+    status["free"]   = float(free)
     status["random"] = random.random()
 
 
@@ -58,7 +58,7 @@ async def main():
     status = {}
     update_status(status);
     oscComunication = OSCComunication(config_data["IP"], status)
- 
+    await oscComunication.start() 
     await loop()
     
     oscComunication.close()
@@ -68,7 +68,7 @@ async def main():
 
 async def loop():
     global status, oscComunication
-
+    print("Starting main loop")
     while(True):
         update_status(status);
         oscComunication.update()

@@ -22,7 +22,6 @@ class OSCComunication:
         self.transport.close()
     
     def update(self):
-        self.server.handle_request()
         
         if(self.client == None):
             return
@@ -67,9 +66,10 @@ class OSCComunication:
         self.dispatcher.map("/start/"    , self._start_handler)
         self.dispatcher.map("/stop/"     , self._stop_handler )
         
-        self.server = AsyncIOOSCUDPServer((ip, port), dispatcher, asyncio.get_event_loop())
+        self.server = AsyncIOOSCUDPServer((self.host_ip, self.in_port), self.dispatcher, asyncio.get_event_loop())
         
-        self.transport, self.protocol = await server.create_serve_endpoint()  # Create datagram endpoint and start serving
+    async def start(self):
+        self.transport, self.protocol = await self.server.create_serve_endpoint()  # Create datagram endpoint and start serving
 
         
                 
