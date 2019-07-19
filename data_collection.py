@@ -11,6 +11,9 @@ data_path = "/media/data"
 
 def get_config_data():
     wlan_mac = get_mac_address(interface="wlan0")
+    wlan_mac = wlan_mac.upper().replace(':', '-')
+
+
     print(wlan_mac)
     field_names = [
         "ID",
@@ -23,13 +26,18 @@ def get_config_data():
         
         
         
-        for field in field_names:
-            if(field not in reader.keys()):
-                raise Exception("CSV does not contain " + field) 
+        #for field in field_names:
+        #    if(field not in reader.keys()):
+        #        raise Exception("CSV does not contain " + field) 
         
         for row in reader:
-            print(row)
+            print(row.keys())
+
             print(row["MAC Address"])
+            for field in field_names:
+                if(field not in row.keys()):
+                    raise Exception("Row does not contain expected feild " + field)
+
             if( row["MAC Address"].casefold() == wlan_mac.casefold()):
                 return row
     
