@@ -3,26 +3,17 @@ from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
 import socket 
 
-def get_host_name_IP(): 
-    try: 
-        host_name = socket.gethostname() 
-        host_ip = socket.gethostbyname(host_name) 
-        print("Hostname :  ",host_name) 
-        print("IP : ",host_ip) 
-        
-        return host_ip
-    except: 
-        print("Unable to get Hostname and IP") 
 
 
 class OSCComunication:
     target_ip = ""
 
-    def __init__(self, in_port = 3821 ):
+    def __init__(self, host_ip, in_port = 3821 ):
         self.in_port = in_port
+        self.host_ip = host_ip
+        
         osc_startup()
 
-        self.host_ip = get_host_name_IP()
         if( self.host_ip is not None) : 
             self._setup_receiver()
 
@@ -57,7 +48,7 @@ class OSCComunication:
         osc_udp_server(self.host_ip, self.in_port , "receiver") # Reciver
         
         osc_method(
-            "/*",
+            "/*/",
             self._all_message_handler,
             argscheme = OSCARG_ADDRESS )
            
