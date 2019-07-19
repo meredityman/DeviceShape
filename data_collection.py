@@ -1,8 +1,6 @@
 import os
 import csv
 import shutil
-
-
 from getmac import get_mac_address
 
 data_path = "/media/data"
@@ -26,7 +24,15 @@ def main():
     print("Total: %d GB" % (total // (2**30)))
     print("Used: %d GB" % (used // (2**30)))
     print("Free: %d GB" % (free // (2**30)))
+    
+    
+    oscComunication = OSCComunication()
 
+def setup():
+    pass
+
+def loop():
+    pass:
     
     
 
