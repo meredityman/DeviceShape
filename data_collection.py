@@ -70,8 +70,9 @@ async def loop():
     global status, oscComunication
     print("Starting main loop")
     while(True):
-        update_status(status);
+        update_status(status)
         oscComunication.update()
+        await asyncio.sleep(0)
 
 if __name__ == "__main__":
     asyncio.run(main())
