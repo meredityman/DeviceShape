@@ -1,6 +1,7 @@
 from pythonosc.dispatcher import Dispatcher
-from pythonosc.osc_server import BlockingOSCUDPServer
+from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.udp_client import SimpleUDPClient
+import asyncio
 
 class OSCComunication:
     target_ip = ""
@@ -17,6 +18,8 @@ class OSCComunication:
     
     def close(self):
         self._send_exit()
+        
+        self.transport.close()
     
     def update(self):
         self.server.handle_request()
@@ -59,12 +62,15 @@ class OSCComunication:
 
         self.dispatcher = Dispatcher()
         
-        self.server = BlockingOSCUDPServer((self.host_ip, self.in_port), self.dispatcher)
-        
         self.dispatcher.map("/handshake/", self._handshake_handler) 
         self.dispatcher.map("/ping/"     , self._ping_handler )
         self.dispatcher.map("/start/"    , self._start_handler)
         self.dispatcher.map("/stop/"     , self._stop_handler )
+        
+        self.server = AsyncIOOSCUDPServer((ip, port), dispatcher, asyncio.get_event_loop())
+        
+        self.transport, self.protocol = await server.create_serve_endpoint()  # Create datagram endpoint and start serving
+
         
                 
     def _handshake_handler(self, address, osc_arguments):

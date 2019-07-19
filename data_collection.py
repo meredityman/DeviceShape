@@ -5,6 +5,7 @@ from getmac import get_mac_address
 from OSCManager  import *
 import time
 import random
+import asyncio
 
 config_path = "device_config.csv"
 data_path = "/media/data"
@@ -39,41 +40,36 @@ def get_config_data():
     raise Exception("Entry for this device not found") 
 
 def update_status(status):
-    #print(os.stat(data_path))
+    print(os.stat(data_path))
     
     total, used, free = shutil.disk_usage(data_path)
     
-    status["total"]  = float(total)
-    status["used"]   = float(used)
-    status["free"]   = float(free)
+    status["total"]  = total
+    status["used"]   = used
+    status["free"]   = free
     status["random"] = random.random()
 
 def main():
-    print("Hello world")
+    global status, oscComunication
     
     config_data = get_config_data()
 
     status = {}
     update_status(status);
     oscComunication = OSCComunication(config_data["IP"], status)
+ 
+    await loop()
+    
+    oscComunication.close()
+    
+    print("End")
+ 
+def loop():
+    global status, oscComunication
 
-    i = 0
-    while(i < 1000):
-        i = i + 1
-        time.sleep(1)
+    while(True):
         update_status(status);
         oscComunication.update()
 
-    oscComunication.close()
-    print("End")
-
-def setup():
-    pass
-
-def loop():
-    pass
-    
-    
-
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
