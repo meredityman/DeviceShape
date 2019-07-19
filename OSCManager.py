@@ -1,96 +1,74 @@
-from osc4py3.as_comthreads import *
-from osc4py3.oscmethod    import *
-from osc4py3 import oscbuildparse
-import time
+from pythonosc.dispatcher import Dispatcher
+from pythonosc.osc_server import BlockingOSCUDPServer
+from pythonosc.udp_client import SimpleUDPClient
 
 class OSCComunication:
     target_ip = ""
     ping_num  = 0
+    server = None
+    client = None
 
     def __init__(self, host_ip, status, in_port = 3821):
         self.in_port = in_port
         self.status  = status
         self.host_ip = host_ip
 
-        osc_startup()
-        self._setup_receiver()
+        self.dispatcher = Dispatcher()
+        
+        self._setup_server()
     
     def close(self):
         print("Exit")
         self._send_exit()
-        osc_process()
-        time.sleep(3)
-        osc_terminate()
     
     def update(self):
-        osc_process()
+        server.handle_request()
         
-        if(self.target_ip == ""):
+        if(self.client == None):
             return
-        else:
-            self._ping()
-            self._send_status()
+            
+        self._ping()
+        self._send_status()
 
-    def send(self, msg):
-        if(self.target_ip != ""):
-            print(msg)
-            osc_send(msg, "sender")
+    def send(self, address, args):
+        if(self.client == None):
+            return
+            
+        print(address)
+        self.client(address, args)
             
     
     def _ping(self):
         print("Ping")
-        msg = oscbuildparse.OSCMessage("/ping/", None, [ self.ping_num ])
-        self.send(msg)
+        self.send("/ping/", [ self.ping_num ])
         self.ping_num = self.ping_num + 1
 
     def _send_exit(self):
-        msg = oscbuildparse.OSCMessage("/exit/", None, [ True ])
-        self.send(msg)
+        self.send("/exit/", [ True ])
         
     def _send_status(self):
         print("Sending status")
         
-        messages = []
         for key, value in self.status.items():
             address = "/status/" + key + "/"
-            print(address + ": " + str(value))
-            msg = oscbuildparse.OSCMessage(address, None, [ value ]) 
-            #self.send(msg)
-            messages.append(msg)
-
-        bundle = oscbuildparse.OSCBundle(oscbuildparse.OSC_IMMEDIATELY, messages)
-        self.send(bundle)
+            self.send(address, [ value ])
             
     def _setup_sender(self):
-        print("Setting up sender {}, {}".format(self.target_ip, self.out_port))
-        osc_udp_client(self.target_ip, self.out_port , "sender")
+        print("Setting up client {}, {}".format(self.target_ip, self.out_port))
+        self.client = SimpleUDPClient(self.target_ip, self.out_port)
         
-    def _setup_receiver(self):
-        print("Setting up receiver")
+    def _setup_server(self):
+        print("Setting up server {}, {}".format(self.host_ip, self.in_port))
 
-        osc_udp_server(self.host_ip, self.in_port , "receiver") # Receiver
+        self.server = BlockingOSCUDPServer((self.host_ip, self.in_port), dispatcher)
         
-        osc_method(
-            "/*/",
-            self._all_message_handler,
-            argscheme = OSCARG_ADDRESS )
-           
+        dispatcher.map("/handshake/", self._handshake_handler) 
+        dispatcher.map("/ping/"     , self._ping_handler )
+        dispatcher.map("/start/"    , self._start_handler)
+        dispatcher.map("/stop/"     , self._stop_handler )
         
-        osc_method(
-            "/handshake/",
-            self._handshake_handler,
-            argscheme = OSCARG_SRCIDENT + OSCARG_DATAUNPACK )
-           
-           
-        osc_method("/ping/"      , self._ping_handler )
-        osc_method("/start/"      , self._start_handler)
-        osc_method("/stop/"       , self._stop_handler )
-        
-    def _all_message_handler(self, adr):
-        #print(adr)
-        pass
                 
-    def _handshake_handler(self, info, *args):
+    def _handshake_handler(self, address: str, *osc_arguments: List[Any]) -> None:
         if(self.target_ip != "") : return
         
         self.target_ip = info[0]
@@ -103,12 +81,12 @@ class OSCComunication:
         self._setup_sender()
             
 
-    def _ping_handler(self, *args):
+    def _ping_handler(self, address: str, *osc_arguments: List[Any]) -> None:
         print("Ping received")
         pass
         
-    def _start_handler(self, *args):
+    def _start_handler(self, address: str, *osc_arguments: List[Any]) -> None:
         pass
         
-    def _stop_handler(self, *args):
+    def _stop_handler(self, address: str, *osc_arguments: List[Any]) -> None:
         pass
