@@ -32,10 +32,12 @@ class OSCComunication:
                   
             self._setup_receiver()
     
-
+    def __del__(self):
+        osc_terminate()
+    
     def send(self, msg):
         if(found_master):
-            osc_send(msg, "sender")
+            osc_send(msg, "server")
             
     
     def ping(self):
@@ -48,18 +50,23 @@ class OSCComunication:
         #osc_send(msg, "sender")
             
     def _setup_sender(self):
-        osc_udp_server(self.target_ip, self.out_port, "aservername")
+        osc_udp_server(self.target_ip, self.out_port, "server")
         
     def _setup_receiver(self):
         osc_udp_server(self.host_ip, self.in_port , "receiver") # Reciver
         
-        osc_method("/handshake/"  , self._handshake_handler )
-        osc_method("/ping/"       , self._ping_handler )
+        osc_method(
+            "/handshake/",
+            self._handshake_handler,
+            argscheme = OSCARG_SRCIDENT + OSCARG_DATAUNPACK )
+           
+           
+        osc_method( "/ping/"      , self._ping_handler )
         osc_method("/start/"      , self._start_handler)
         osc_method("/stop/"       , self._stop_handler )
         
-    def _handshake_handler(self, *args):
-        print("Handshake")
+    def _handshake_handler(self, info, *args):
+        print(info)
         pass
         
     def _ping_handler(self, *args):
