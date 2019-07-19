@@ -1,4 +1,4 @@
-from osc4py3.as_allthreads import *
+from osc4py3.as_comthreads import *
 from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
 import socket 
@@ -18,23 +18,22 @@ def get_host_name_IP():
 class OSCComunication:
     target_ip = ""
 
-    def __init__(self,
-        in_port     = 3821, 
-        out_port    = 2881
-    ):
-        self.in_port  = in_port
-        self.out_port = out_port
-        
+    def __init__(self, in_port = 3821 ):
+        self.in_port = in_port
         osc_startup()
 
         self.host_ip = get_host_name_IP()
-        if( self.host_ip ) : 
-                  
+        if( self.host_ip is not None) : 
             self._setup_receiver()
+
+
     
     def __del__(self):
         osc_terminate()
     
+    def update(self):
+        osc_process()
+
     def send(self, msg):
         if(found_master):
             osc_send(msg, "server")
@@ -53,6 +52,8 @@ class OSCComunication:
         osc_udp_server(self.target_ip, self.out_port, "server")
         
     def _setup_receiver(self):
+        print("Setting up receiver")
+
         osc_udp_server(self.host_ip, self.in_port , "receiver") # Reciver
         
         osc_method(

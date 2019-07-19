@@ -3,7 +3,7 @@ import csv
 import shutil
 from getmac import get_mac_address
 from OSCManager  import *
-
+import time
 
 data_path = "/media/data"
 
@@ -29,6 +29,13 @@ def main():
     
     
     oscComunication = OSCComunication()
+
+    while(True):
+        time.sleep(1)
+        print("Here")
+        oscComunication.update()
+
+    print("End")
 
 def setup():
     pass
