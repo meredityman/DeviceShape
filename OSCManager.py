@@ -1,32 +1,18 @@
 from osc4py3.as_comthreads import *
 from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
-import socket 
-import logging
-
+import time
 
 class OSCComunication:
     target_ip = ""
 
-    def __init__(self, host_ip, in_port = 3821 ):
+    def __init__(self, host_ip, status, in_port = 3821):
         self.in_port = in_port
+        self.status  = status
         self.host_ip = host_ip
-        
 
-
-        #osc_startup()
-
-        logging.basicConfig(format='%(asctime)s - %(threadName)s ø %(name)s - '
-'%(levelname)s - %(message)s')
-        logger = logging.getLogger("osc")
-        logger.setLevel(logging.DEBUG)
-        osc_startup(logger=logger)
-
-        if( self.host_ip is not None) : 
-            self._setup_receiver()
-
-
-
+        osc_startup()
+        self._setup_receiver()
     
     def __del__(self):
         osc_terminate()
@@ -37,23 +23,32 @@ class OSCComunication:
         if(self.target_ip == ""):
             return
         else:
-            self.ping()
+            self._ping()
+            self._send_status()
 
     def send(self, msg):
         if(self.target_ip != ""):
             osc_send(msg, "sender")
             
     
-    def ping(self):
+    def _ping(self):
         print("Ping")
         msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
         self.send(msg)
         
+    def _send_status(self):
         
-    def report_status(self):
-        pass
-        #msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
-        #osc_send(msg, "sender")
+        messages = []
+        for key, value in status.items():
+            address = "/status/" + key
+            msg = oscbuildparse.OSCMessage("address", None, [ value ]) 
+            messages.append(msg)
+            
+        exectime = time.time()
+            
+        bun = oscbuildparse.OSCBundle(oscbuildparse.unixtime2timetag(exectime), messages)
+        
+        send(bun)
             
     def _setup_sender(self):
         print("Setting up sender {}, {}".format(self.target_ip, self.out_port))
@@ -98,8 +93,7 @@ class OSCComunication:
             
 
     def _ping_handler(self, *args):
-        print("Ping recieved")
-
+        print("Ping received")
         pass
         
     def _start_handler(self, *args):

@@ -4,6 +4,7 @@ import shutil
 from getmac import get_mac_address
 from OSCManager  import *
 import time
+import random
 
 config_path = "device_config.csv"
 data_path = "/media/data"
@@ -30,32 +31,35 @@ def get_config_data():
             print(row["MAC Address"])
             for field in field_names:
                 if(field not in row.keys()):
-                    raise Exception("Row does not contain expected feild " + field)
+                    raise Exception("Row does not contain expected field " + field)
 
             if( row["MAC Address"].casefold() == wlan_mac.casefold()):
                 return row
     
     raise Exception("Entry for this device not found") 
 
-def get_status():
+def update_status(status):
     print(os.stat(data_path))
     
     total, used, free = shutil.disk_usage(data_path)
     
-    print("total: %d gb" % (total // (2**30)))
-    print("used: %d gb" % (used // (2**30)))
-    print("free: %d gb" % (free // (2**30)))
+    status["total"]  = total
+    status["used"]   = used
+    status["free"]   = free
+    status["random"] = random.random()
 
 def main():
     print("Hello world")
     
     config_data = get_config_data()
 
-    oscComunication = OSCComunication(config_data["IP"])
+    status = {}
+    update_status(status);
+    oscComunication = OSCComunication(config_data["IP"], status)
 
     while(True):
         time.sleep(1)
-
+        update_status(status);
         oscComunication.update()
     
     print("End")
