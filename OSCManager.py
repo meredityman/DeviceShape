@@ -53,7 +53,12 @@ class OSCComunication:
         osc_udp_server(self.target_ip, self.out_port, "server")
         
     def _setup_receiver(self):
-        osc_udp_server(self.host_ip, self.in_port , "receiver") # Reciver
+        osc_udp_server(self.host_ip, self.in_port , "receiver") # Receiver
+        
+        
+        osc_method( "/*",
+            self._all_message_handler,
+            argscheme = OSCARG_ADDRESS )
         
         osc_method(
             "/handshake/",
@@ -64,7 +69,12 @@ class OSCComunication:
         osc_method( "/ping/"      , self._ping_handler )
         osc_method("/start/"      , self._start_handler)
         osc_method("/stop/"       , self._stop_handler )
-        
+
+    def _all_message_handler(self, adr):
+        print(adr)
+        pass
+             
+     
     def _handshake_handler(self, info, *args):
         print(info)
         pass
