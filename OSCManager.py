@@ -2,7 +2,7 @@ from osc4py3.as_comthreads import *
 from osc4py3.oscmethod    import *
 from osc4py3 import oscbuildparse
 import socket 
-
+import logging
 
 
 class OSCComunication:
@@ -12,10 +12,19 @@ class OSCComunication:
         self.in_port = in_port
         self.host_ip = host_ip
         
-        osc_startup()
+
+
+        #osc_startup()
+
+        logging.basicConfig(format='%(asctime)s - %(threadName)s ø %(name)s - '
+'%(levelname)s - %(message)s')
+        logger = logging.getLogger("osc")
+        logger.setLevel(logging.DEBUG)
+        osc_startup(logger=logger)
 
         if( self.host_ip is not None) : 
             self._setup_receiver()
+
 
 
     
@@ -32,13 +41,14 @@ class OSCComunication:
 
     def send(self, msg):
         if(self.target_ip != ""):
-            osc_send(msg, "server")
+            osc_send(msg, "sender")
             
     
     def ping(self):
         print("Ping")
         msg = oscbuildparse.OSCMessage("/ping/", None, [ True ])
         self.send(msg)
+        
         
     def report_status(self):
         pass
@@ -47,7 +57,7 @@ class OSCComunication:
             
     def _setup_sender(self):
         print("Setting up sender {}, {}".format(self.target_ip, self.out_port))
-        osc_udp_server(self.target_ip, self.out_port, "server")
+        osc_udp_client(self.target_ip, self.out_port , "sender")
         
     def _setup_receiver(self):
         print("Setting up receiver")
@@ -88,6 +98,8 @@ class OSCComunication:
             
 
     def _ping_handler(self, *args):
+        print("Ping recieved")
+
         pass
         
     def _start_handler(self, *args):
