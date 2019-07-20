@@ -69,9 +69,14 @@ async def main():
 async def loop():
     global status, oscComunication
     print("Starting main loop")
-    while(True):
-        update_status(status);
-        oscComunication.update()
+    try:
+        while(True):
+            update_status(status)
+            oscComunication.update()
+            await asyncio.sleep(0)
+
+    except (KeyboardInterrupt, SystemExit):
+        pass
 
 if __name__ == "__main__":
     asyncio.run(main())

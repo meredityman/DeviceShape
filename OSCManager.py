@@ -22,7 +22,8 @@ class OSCComunication:
         self.transport.close()
     
     def update(self):
-        
+        print("loop")
+
         if(self.client == None):
             return
             
