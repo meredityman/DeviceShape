@@ -18,12 +18,10 @@ class OSCComunication:
     
     def close(self):
         self._send_exit()
-        
-        self.transport.close()
-    
-    def update(self):
-        print("loop")
 
+        self.transport.close()
+
+    def update(self):
         if(self.client == None):
             return
             
