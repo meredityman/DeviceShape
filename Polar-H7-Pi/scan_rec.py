@@ -2,8 +2,16 @@ import gatt
 from datetime import datetime
 from UUIDmappings import ser_to_name, char_to_name
 
+class AnyDeviceManager(gatt.DeviceManager):
+    def device_discovered(self, device):
+        print("Discovered [%s] %s" % (device.mac_address, device.alias()))
 
-class AnyDevice(gatt.Device):
+manager = AnyDeviceManager(adapter_name='hci0')
+manager.start_discovery()
+manager.run()
+
+
+class PolarDevice(gatt.Device):
     _UUID_SERVICE_DEV_INFO = '0000180a-0000-1000-8000-00805f9b34fb'
     _UUID_SERVICE_BATT = '0000180f-0000-1000-8000-00805f9b34fb'
     _UUID_SERVICE_HR = '0000180d-0000-1000-8000-00805f9b34fb'
@@ -86,11 +94,7 @@ class AnyDevice(gatt.Device):
 
 
 
-manager = AnyDeviceManager(adapter_name='hci0')
-manager.start_discovery()
-manager.run()
-
-#device = AnyDevice(mac_address='A0:9E:1A:1A:EE:80', manager=manager)
-#device.connect()
+device = PolarDevice(mac_address='A0:9E:1A:1A:EE:80', manager=manager)
+device.connect()
 
 #manager.run()
