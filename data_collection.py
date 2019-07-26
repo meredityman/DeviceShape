@@ -5,8 +5,8 @@ import time
 import random
 import asyncio
 
-from lib.OSCManager  import *
-from lib.AdcSource   import AdcSource
+from src.OSCManager  import *
+from src.AdcSource   import AdcSource
 
 config_path = "device_config.csv"
 
