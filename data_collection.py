@@ -2,10 +2,11 @@ import os
 import csv
 import shutil
 from getmac import get_mac_address
-from OSCManager  import *
 import time
 import random
 import asyncio
+
+from lib.OSCManager  import *
 
 config_path = "device_config.csv"
 data_path = "/media/data"
