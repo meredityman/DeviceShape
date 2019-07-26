@@ -112,5 +112,7 @@ class LoggingChannel():
             
         file_name = self.name + "_" + time.strftime("%Y%m%d-%H%M%S", self.start_file_time) + ".txt"
         
-        self.log_file = open(file_name, "a")
+        path_path = os.path.join(self.path, file_name)
+        
+        self.log_file = open(path_path, "a")
         

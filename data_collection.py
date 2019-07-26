@@ -71,10 +71,10 @@ async def main_loop():
     try:
         while(True):
             oscComunication.update()
-            
+            print("loop")
             write_data_source(adcSource)
             
-            await asyncio.sleep(0)
+            await asyncio.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):
         pass
