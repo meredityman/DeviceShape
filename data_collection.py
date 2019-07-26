@@ -53,8 +53,10 @@ async def main():
 
     
     
-    await adcSource.start();
+    #await adcSource.start();
     await oscComunication.start_server()
+    
+    print("Here")
     await main_loop()
     
     oscComunication.close()
@@ -70,7 +72,7 @@ async def main_loop():
         while(True):
             oscComunication.update()
             print("loop")
-            write_data_source(adcSource)
+            logging_manager.write_data_source(adcSource)
             
             await asyncio.sleep(1)
 
