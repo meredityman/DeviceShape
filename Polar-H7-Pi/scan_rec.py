@@ -8,8 +8,6 @@ class AnyDeviceManager(gatt.DeviceManager):
 
 manager = AnyDeviceManager(adapter_name='hci0')
 manager.start_discovery()
-#manager.run()
-
 
 class PolarDevice(gatt.Device):
     _UUID_SERVICE_DEV_INFO = '0000180a-0000-1000-8000-00805f9b34fb'

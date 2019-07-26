@@ -1,16 +1,14 @@
 import os
 import csv
-import shutil
 from getmac import get_mac_address
 import time
 import random
 import asyncio
 
 from lib.OSCManager  import *
+from lib.AdcSource   import AdcSource
 
 config_path = "device_config.csv"
-data_path = "/media/data"
-
 
 def get_config_data():
     wlan_mac = get_mac_address(interface="wlan0")
@@ -40,39 +38,30 @@ def get_config_data():
     
     raise Exception("Entry for this device not found") 
 
-def update_status(status):
-    #print(os.stat(data_path))
-    
-    total, used, free = shutil.disk_usage(data_path)
-    
-    status["total"]  = float(total)
-    status["used"]   = float(used)
-    status["free"]   = float(free)
-    status["random"] = random.random()
-
 
 async def main():
     global status, oscComunication
     
     config_data = get_config_data()
-
-    status = {}
-    update_status(status);
-    oscComunication = OSCComunication(config_data["IP"], status)
-    await oscComunication.start() 
-    await loop()
+    
+    oscComunication = OSCComunication(config_data["IP"])
+    
+    adcSource = AdcSource()
+    adcSource.start();
+    
+    await oscComunication.start_server()
+    await main_loop()
     
     oscComunication.close()
     
     print("End")
  
 
-async def loop():
+async def main_loop():
     global status, oscComunication
     print("Starting main loop")
     try:
         while(True):
-            update_status(status)
             oscComunication.update()
             await asyncio.sleep(0)
 
