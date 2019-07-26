@@ -53,7 +53,7 @@ async def main():
 
     
     
-    #await adcSource.start();
+    adcLoop = adcSource.start();
     await oscComunication.start_server()
     
     print("Here")

@@ -17,8 +17,7 @@ class AdcDataSource():
     async def  start(self):
         self.running = True   
         
-        self.loop = asyncio.get_event_loop()
-        self.loop.run_until_complete(self.main_loop())
+        return asyncio.create_task(main_loop())
 
         
     async def main_loop(self):
