@@ -47,13 +47,13 @@ class LoggingManager():
     
     
     def write_data_source(self, dataSource):
-        name = data.name
-        data = dataSource.getData();
+        name = dataSource.name
+        data = dataSource.get_data();
         
         if(len(data) == 0 ) : return
         
         for d in data:
-            for key, values in d:
+            for key, values in d.items():
                 self.write_entry(name, key, values)
             
     

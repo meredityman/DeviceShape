@@ -3,6 +3,8 @@ import csv
 import time
 import asyncio
 
+from getmac import get_mac_address
+
 from src.OSCManager  import *
 from src.AdcDataSource   import AdcDataSource
 from src.DataLogger import LoggingManager
@@ -53,7 +55,7 @@ async def main():
 
     
     
-    adcLoop = adcSource.start();
+    adcLoop = await adcSource.start();
     await oscComunication.start_server()
     
     print("Here")
@@ -74,7 +76,7 @@ async def main_loop():
             print("loop")
             logging_manager.write_data_source(adcSource)
             
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
 
     except (KeyboardInterrupt, SystemExit):
         pass

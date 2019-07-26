@@ -14,10 +14,13 @@ class AdcDataSource():
         self.running = False;
         self.data = []
 
+    def get_data(self):
+        return self.data
+
     async def  start(self):
         self.running = True   
         
-        return asyncio.create_task(main_loop())
+        return asyncio.create_task(self.main_loop())
 
         
     async def main_loop(self):
