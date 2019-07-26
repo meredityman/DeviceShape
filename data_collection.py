@@ -1,8 +1,6 @@
 import os
 import csv
-from getmac import get_mac_address
 import time
-import random
 import asyncio
 
 from src.OSCManager  import *
