@@ -8,7 +8,7 @@ class AnyDeviceManager(gatt.DeviceManager):
 
 manager = AnyDeviceManager(adapter_name='hci0')
 manager.start_discovery()
-manager.run()
+#manager.run()
 
 
 class PolarDevice(gatt.Device):
@@ -97,4 +97,4 @@ class PolarDevice(gatt.Device):
 device = PolarDevice(mac_address='A0:9E:1A:1A:EE:80', manager=manager)
 device.connect()
 
-#manager.run()
+manager.run()
