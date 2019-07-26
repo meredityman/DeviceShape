@@ -2,7 +2,7 @@ import os
 import time
 import shutil
 
-data_path = "/media/data"
+
 
 class LoggingManager():
     min_space = 1e+9
@@ -49,6 +49,8 @@ class LoggingManager():
     def write_data_source(self, dataSource):
         name = data.name
         data = dataSource.getData();
+        
+        if(len(data) == 0 ) return
         
         for d in data
             for key, values in d:

@@ -6,7 +6,7 @@ import asyncio
 class AdcDataSource():
 
     def __init(self, polling_rate = 10, address=0x68, address2=0x69, rate=18):
-    
+        self.name = "ADC"
         self.adc = ADCPi(address, address2, rate)        
         self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
         self.polling_rate = polling_rate

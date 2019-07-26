@@ -9,6 +9,7 @@ from src.OSCManager  import *
 from src.AdcSource   import AdcSource
 
 config_path = "device_config.csv"
+data_path = "/media/data"
 
 def get_config_data():
     wlan_mac = get_mac_address(interface="wlan0")
@@ -40,15 +41,20 @@ def get_config_data():
 
 
 async def main():
-    global status, oscComunication
+    global status, oscComunication, logging_manager, adcSource
     
     config_data = get_config_data()
     
     oscComunication = OSCComunication(config_data["IP"])
     
     adcSource = AdcSource()
-    adcSource.start();
     
+    logging_manager = LoggingManager(data_path)    
+    logging_manager.add_logging_channel(adcSource.name)
+
+    
+    
+    await adcSource.start();
     await oscComunication.start_server()
     await main_loop()
     
@@ -58,11 +64,15 @@ async def main():
  
 
 async def main_loop():
-    global status, oscComunication
+    global status, oscComunication, logging_manager, adcSource
+    
     print("Starting main loop")
     try:
         while(True):
             oscComunication.update()
+            
+            write_data_source(adcSource)
+            
             await asyncio.sleep(0)
 
     except (KeyboardInterrupt, SystemExit):
