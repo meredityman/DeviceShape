@@ -6,7 +6,7 @@ import random
 import asyncio
 
 from src.OSCManager  import *
-from src.AdcSource   import AdcSource
+from src.AdcDataSource   import AdcDataSource
 
 config_path = "device_config.csv"
 
@@ -46,8 +46,8 @@ async def main():
     
     oscComunication = OSCComunication(config_data["IP"])
     
-    adcSource = AdcSource()
-    adcSource.start();
+    adcSource = AdcDataSource()
+    await adcSource.start();
     
     await oscComunication.start_server()
     await main_loop()

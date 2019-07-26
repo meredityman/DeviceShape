@@ -5,7 +5,7 @@ import asyncio
 
 class AdcDataSource():
 
-    def __init(self, polling_rate = 10, address=0x68, address2=0x69, rate=18):
+    def __init__(self, polling_rate = 10, address=0x68, address2=0x69, rate=18):
     
         self.adc = ADCPi(address, address2, rate)        
         self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -14,16 +14,18 @@ class AdcDataSource():
         self.running = False;
         self.data = []
 
-    async start(self):
+    async def start(self):
+        self.running = True
         return await self.main_loop()
         
-    async def loop(self):
+    async def main_loop(self):
     
         while(self.running):
             
             data = {}            
-            for ch in channels:                
+            for ch in self.channels:                
                 data[str(ch)] = self.adc.read_voltage(ch)
-    
+            
+            print(data)    
             self.data.append(data)            
-            asyncio.sleep( 1.0 / self.polling_rate)
+            await asyncio.sleep( 1.0 / self.polling_rate)
