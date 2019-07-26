@@ -50,9 +50,9 @@ class LoggingManager():
         name = data.name
         data = dataSource.getData();
         
-        if(len(data) == 0 ) return
+        if(len(data) == 0 ) : return
         
-        for d in data
+        for d in data:
             for key, values in d:
                 self.write_entry(name, key, values)
             

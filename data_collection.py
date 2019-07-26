@@ -6,7 +6,8 @@ import random
 import asyncio
 
 from src.OSCManager  import *
-from src.AdcSource   import AdcSource
+from src.AdcDataSource   import AdcDataSource
+from src.DataLogger import LoggingManager
 
 config_path = "device_config.csv"
 data_path = "/media/data"
@@ -47,7 +48,7 @@ async def main():
     
     oscComunication = OSCComunication(config_data["IP"])
     
-    adcSource = AdcSource()
+    adcSource = AdcDataSource()
     
     logging_manager = LoggingManager(data_path)    
     logging_manager.add_logging_channel(adcSource.name)
