@@ -16,7 +16,10 @@ class AdcDataSource():
 
     async def  start(self):
         self.running = True   
-        return await self.main_loop()
+        
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_until_complete(main_loop())
+
         
     async def main_loop(self):
     
