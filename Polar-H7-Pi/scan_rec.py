@@ -1,9 +1,6 @@
 import gatt
 from datetime import datetime
-import mac
 from UUIDmappings import ser_to_name, char_to_name
-
-manager = gatt.DeviceManager(adapter_name='hci0')
 
 
 class AnyDevice(gatt.Device):
@@ -17,6 +14,10 @@ class AnyDevice(gatt.Device):
 
     buff = []
     BUFF_SIZE = 300
+
+
+    def device_discovered(self, device):
+        print("Discovered [%s] %s" % (device.mac_address, device.alias()))
 
     def connect_succeeded(self):
         super().connect_succeeded()
@@ -84,7 +85,12 @@ class AnyDevice(gatt.Device):
             self.buff = []
 
 
-device = AnyDevice(mac_address="A0:9E:1A:1A:EE:80", manager=manager)
-device.connect()
 
+manager = AnyDeviceManager(adapter_name='hci0')
+manager.start_discovery()
 manager.run()
+
+#device = AnyDevice(mac_address='A0:9E:1A:1A:EE:80', manager=manager)
+#device.connect()
+
+#manager.run()
