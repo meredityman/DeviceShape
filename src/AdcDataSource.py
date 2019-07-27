@@ -2,7 +2,7 @@ from ADCPi import ADCPi
 import asyncio
 import time
 
-from BaseDataSource import BaseDataSource
+from src.BaseDataSource import BaseDataSource
 
 class AdcDataSource(BaseDataSource):
 
@@ -29,7 +29,7 @@ class AdcDataSource(BaseDataSource):
             
         sample_rate = min(max_sample_rate, sample_rate)
         
-        BaseDataSource.__init__("ADC", sample_rate)
+        super(AdcDataSource, self).__init__("ADC", sample_rate)
         
         
     async def main_loop(self):

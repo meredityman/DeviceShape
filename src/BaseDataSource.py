@@ -1,5 +1,5 @@
 import asyncio
-import time.time()
+import time
 
 class BaseDataSource():
 

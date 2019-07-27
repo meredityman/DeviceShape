@@ -1,8 +1,8 @@
 import gatt
-from UUIDmappings import ser_to_name, char_to_name
+from src.UUIDmappings import ser_to_name, char_to_name
 import time
 
-from BaseDataSource import BaseDataSource
+from src.BaseDataSource import BaseDataSource
 
 
 class PolarDevice(gatt.Device):
@@ -103,11 +103,11 @@ class PolarDataSource(BaseDataSource):
         print("Powered: ", self.manager.is_adapter_powered)
         
         self.device = PolarDevice(mac_address=mac_address, manager=self.manager)
-        device.connect()
+        self.device.connect()
         
-        manager.run()
+        self.manager.run()
         
-        BaseDataSource.__init__("Polar", 1)
+        super(PolarDataSourcem, self).__init__("Polar", 1)
         
        
     def get_data(self, clear_cache=False):
