@@ -13,9 +13,20 @@ class AdcDataSource():
         
         self.running = False;
         self.data = []
+        
+        print("ADC Setup")
 
-    def get_data(self):
-        return self.data
+
+    def clear_cache(self):
+        self.data = []
+
+    def get_data(self, clear_cache=False):
+        if(clear_cache):
+            data = self.data
+            self.clear_cache()
+            return data
+        else:    
+            return self.data
 
     async def  start(self):
         self.running = True   

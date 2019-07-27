@@ -58,7 +58,7 @@ async def main_loop():
     global oscComunication, logging_manager, dataSources, power
     
     while(True):
-    
+        print("Loop")
         if( power.is_low_power()) : print("Low Power!!")
     
         oscComunication.update()
