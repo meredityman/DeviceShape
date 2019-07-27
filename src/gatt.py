@@ -1,20 +1,21 @@
 from dbus_next.aio import MessageBus
+from asyncinit import asyncinit
 
 import re
 import asyncio
 
-from gi.repository import GObject
+#from gi.repository import GObject
 
 
 
-
+@asyncinit
 class DeviceManager:
     """
     Entry point for managing BLE GATT devices.
     This class is intended to be subclassed to manage a specific set of GATT devices.
     """
 
-    async def __init__(self, adapter_name):
+    await def __init__(self, adapter_name):
         self.listener = None
         self.adapter_name = adapter_name
 
@@ -40,6 +41,8 @@ class DeviceManager:
         self._main_loop = None
 
         self.update_devices()
+        
+    
 
     @property
     def is_adapter_powered(self):
