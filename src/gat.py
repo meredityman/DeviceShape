@@ -28,7 +28,8 @@ class DeviceManager:
     def __init__(self, adapter_name):
         self.listener = None
         self.adapter_name = adapter_name
-
+        
+        
         self._bus = dbus.SystemBus()
         try:
             adapter_object = self._bus.get_object('org.bluez', '/org/bluez/' + adapter_name)

@@ -1,4 +1,4 @@
-from ADCPi import ADCPi
+from src.ADCPi import ADCPi
 import asyncio
 import time
 
