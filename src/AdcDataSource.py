@@ -27,13 +27,9 @@ class AdcDataSource():
             return data
         else:    
             return self.data
-
-    async def  start(self):
-        self.running = True   
-        self.loop = asyncio.create_task(self.main_loop())
         
     async def main_loop(self):
-    
+        self.running = True 
         while(self.running):
             
             data = {}            
@@ -42,4 +38,4 @@ class AdcDataSource():
             
             print(data)
             self.data.append(data)            
-            await asyncio.sleep( 0.01)
+            await asyncio.sleep( 0.001)
