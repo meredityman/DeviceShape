@@ -1,7 +1,7 @@
 import asyncio
 import time
 import random
-
+from src.OSCManager  import *
 
 class Worker():
     
@@ -30,8 +30,12 @@ async def mainThread( workers):
                 print(worker.data)
                 worker.data = []
 
-async def main():
+def main():
     loop = asyncio.get_event_loop()
+    
+    oscComunication = OSCComunication("12")
+    asyncio.wait(oscComunication.start_server())
+    
     try:
         workers = [
             Worker(0.01),
@@ -50,4 +54,4 @@ async def main():
         loop.close()
         
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

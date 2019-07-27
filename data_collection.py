@@ -1,90 +1,74 @@
 import os
-import csv
 import time
 import asyncio
 
-from getmac import get_mac_address
-
-from src.OSCManager  import *
-from src.AdcDataSource   import AdcDataSource
-from src.DataLogger import LoggingManager
-from src.Power import Power
+from src.OSCManager    import *
+from src.AdcDataSource import AdcDataSource
+from src.DataLogger    import LoggingManager
+from src.Power         import Power
+from src.Config        import GetConfig
 
 config_path = "device_config.csv"
 data_path = "/media/data"
 
-def get_config_data():
-    wlan_mac = get_mac_address(interface="wlan0")
-    wlan_mac = wlan_mac.upper().replace(':', '-')
 
-
-    print(wlan_mac)
-    field_names = [
-        "ID",
-        "Color",
-        "MAC Address",
-        "IP"]
+def main():
+    global oscComunication, logging_manager, dataSources, power
     
-    with open(config_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        
-        for row in reader:
-            print(row.keys())
-
-            print(row["MAC Address"])
-            for field in field_names:
-                if(field not in row.keys()):
-                    raise Exception("Row does not contain expected field " + field)
-
-            if( row["MAC Address"].casefold() == wlan_mac.casefold()):
-                return row
-    
-    raise Exception("Entry for this device not found") 
-
-
-async def main():
-    global status, oscComunication, logging_manager, adcSource, power
+    config = GetConfig(config_path)
+    print(config)
     
     power = Power()
     
-    config_data = get_config_data()
+    ## Setup OSC   
+    oscComunication = OSCComunication(config["IP"])
+    asyncio.wait( scComunication.start_server() )
     
-    oscComunication = OSCComunication(config_data["IP"])
+    ## Setup Data Sources    
+    dataSources = [
+        AdcDataSource()    
+    ]
     
-    adcSource = AdcDataSource()
     
+    ## Setup Logging
     logging_manager = LoggingManager(data_path)    
-    logging_manager.add_logging_channel(adcSource.name)
+    for dataSource in dataSources
+        logging_manager.add_logging_channel(dataSource.name)
 
     
+    loop = asyncio.get_event_loop()    
     
-    await adcSource.start();
-    #await oscComunication.start_server()
-    await main_loop()
+    asyncio.ensure_future(main_loop())
+    for dataSource in dataSources
+        asyncio.ensure_future(dataSource.main_loop())
     
-    oscComunication.close()
+    
+    try:    
+        loop.run_forever()        
+    except (KeyboardInterrupt, SystemExit):
+        loop.close()
+        oscComunication.close()
+
     
     print("End")
 
 
 
 async def main_loop():
-    global status, oscComunication, logging_manager, adcSource, power
+    global oscComunication, logging_manager, dataSources, power
     
-    print("Starting main loop")
-    try:
-        while(True):
+    while(True):
+    
+        if( power.is_low_power()) : print("Low Power!!")
+    
+        oscComunication.update()
         
-            if( power.is_low_power()) : print("Low Power!!")
+        for dataSource in dataSources
+            logging_manager.write_data_source(dataSource.name)
         
-            #oscComunication.update()
-            print("loop")
-            #logging_manager.write_data_source(adcSource)
-            
-            await asyncio.sleep(1)
+        await asyncio.sleep(1)
 
-    except (KeyboardInterrupt, SystemExit):
-        pass
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
