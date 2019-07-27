@@ -1,4 +1,4 @@
-import src.gatt
+import src.gatt as gatt
 from src.UUIDmappings import ser_to_name, char_to_name
 import time
 

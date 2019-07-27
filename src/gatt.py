@@ -6,8 +6,6 @@ import asyncio
 from gi.repository import GObject
 
 
-dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-dbus.mainloop.glib.threads_init()
 
 
 class DeviceManager:
