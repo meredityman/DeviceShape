@@ -22,7 +22,7 @@ def main():
     
     ## Setup OSC   
     oscComunication = OSCComunication(config["IP"])
-    asyncio.wait( scComunication.start_server() )
+    asyncio.ensure_future( oscComunication.start_server() )
     
     ## Setup Data Sources    
     dataSources = [
@@ -32,14 +32,14 @@ def main():
     
     ## Setup Logging
     logging_manager = LoggingManager(data_path)    
-    for dataSource in dataSources
+    for dataSource in dataSources:
         logging_manager.add_logging_channel(dataSource.name)
 
     
     loop = asyncio.get_event_loop()    
     
     asyncio.ensure_future(main_loop())
-    for dataSource in dataSources
+    for dataSource in dataSources:
         asyncio.ensure_future(dataSource.main_loop())
     
     
@@ -63,8 +63,8 @@ async def main_loop():
     
         oscComunication.update()
         
-        for dataSource in dataSources
-            logging_manager.write_data_source(dataSource.name)
+        for dataSource in dataSources:
+            logging_manager.write_data_source(dataSource)
         
         await asyncio.sleep(1)
 
