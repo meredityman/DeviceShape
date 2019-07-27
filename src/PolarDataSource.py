@@ -79,37 +79,33 @@ class PolarDevice(gatt.Device):
 
     def register(self, val):
         self.buff.append(str(val) + ", "
-                         + datetime.now().strftime("%H:%M:%S.%f"))
+                         + time.strftime("%Y%m%d-%H%M%S")
         if len(self.buff) > self.BUFF_SIZE:
-            with open(datetime.now().strftime("%H-%H-%S.%f") + ".csv",
+            with open(time.strftime("%Y%m%d-%H%M%S") + ".csv",
                       "w") as fh:
                 fh.write("\n".join(self.buff))
             self.buff = []
 
-class AnyDeviceManager(gatt.DeviceManager):
-    def device_discovered(self, device):
-        print("Discovered [%s] %s" % (device.mac_address, device.alias()))
-
-
-
-class PolarDataSource(BaseDataSource):
+class PolarDataSource(BaseDataSource, gatt.DeviceManager):
 
     def __init__(self, mac_address):
+        super(gatt.DeviceManager, self).__init__(adapter_name='hci0')
+    
         self.mac_address = mac_address
         
-        self.manager = AnyDeviceManager(adapter_name='hci0')
-        #manager.start_discovery()
-        
-        print("Powered: ", self.manager.is_adapter_powered)
+        print("Powered: ", self.is_adapter_powered)
         
         self.device = PolarDevice(mac_address=mac_address, manager=self.manager)
         self.device.connect()
         
-        self.manager.run()
+        run()
         
-        super(PolarDataSourcem, self).__init__("Polar", 1)
-        
-       
+        super(PolarDataSource, self).__init__("Polar", 1)
+
+    def device_discovered(self, device):
+        print("Discovered [%s] %s" % (device.mac_address, device.alias()))
+
+
     def get_data(self, clear_cache=False):
         if(clear_cache):
             data = self.data
