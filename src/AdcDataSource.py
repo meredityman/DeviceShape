@@ -13,13 +13,13 @@ class AdcDataSource():
     }
 
 
-    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=16):
+    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=14):
         self.name = "ADC"
         self.adc = ADCPi(address, address2, rate)        
         self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
         
-        if rate in sample_rates:
-            max_sample_rate = sampe_rates[rate]
+        if rate in self.sample_rates:
+            max_sample_rate = self.sample_rates[rate]
         else :
             print("bit rate {} not permitted".format(rate))
             rate = 16

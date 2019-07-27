@@ -66,7 +66,7 @@ class LoggingManager():
         if(name not in self.logging_channels):
             print( "Logging for " + name + " not setup")
             return
-        
+
         self.logging_channels[name].write_entry(type, *values)
     
 class LoggingChannel():
