@@ -8,6 +8,7 @@ from getmac import get_mac_address
 from src.OSCManager  import *
 from src.AdcDataSource   import AdcDataSource
 from src.DataLogger import LoggingManager
+from src.Power import Power
 
 config_path = "device_config.csv"
 data_path = "/media/data"
@@ -42,7 +43,9 @@ def get_config_data():
 
 
 async def main():
-    global status, oscComunication, logging_manager, adcSource
+    global status, oscComunication, logging_manager, adcSource, power
+    
+    power = Power()
     
     config_data = get_config_data()
     
@@ -55,23 +58,25 @@ async def main():
 
     
     
-    adcLoop = await adcSource.start();
+    await adcSource.start();
     await oscComunication.start_server()
-    
-    print("Here")
     await main_loop()
     
     oscComunication.close()
     
     print("End")
- 
+
+
 
 async def main_loop():
-    global status, oscComunication, logging_manager, adcSource
+    global status, oscComunication, logging_manager, adcSource, power
     
     print("Starting main loop")
     try:
         while(True):
+        
+            if( power.is_low_power()) : print("Low Power!!")
+        
             oscComunication.update()
             print("loop")
             logging_manager.write_data_source(adcSource)

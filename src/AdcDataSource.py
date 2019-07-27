@@ -19,9 +19,7 @@ class AdcDataSource():
 
     async def  start(self):
         self.running = True   
-        
-        return asyncio.create_task(self.main_loop())
-
+        this.loop = asyncio.create_task(self.main_loop())
         
     async def main_loop(self):
     
