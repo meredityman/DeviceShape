@@ -78,8 +78,8 @@ class PolarDevice(gatt.Device):
                                    "Char name unrecognised."))
 
     def register(self, val):
-        self.buff.append(str(val) + ", "
-                         + time.strftime("%Y%m%d-%H%M%S")
+        self.buff.append(str(val) + ", " + time.strftime("%Y%m%d-%H%M%S"))
+
         if len(self.buff) > self.BUFF_SIZE:
             with open(time.strftime("%Y%m%d-%H%M%S") + ".csv",
                       "w") as fh:
@@ -89,18 +89,19 @@ class PolarDevice(gatt.Device):
 class PolarDataSource(BaseDataSource, gatt.DeviceManager):
 
     def __init__(self, mac_address):
-        super(gatt.DeviceManager, self).__init__(adapter_name='hci0')
+        gatt.DeviceManager.__init__(self, 'hci0')
     
         self.mac_address = mac_address
         
         print("Powered: ", self.is_adapter_powered)
         
-        self.device = PolarDevice(mac_address=mac_address, manager=self.manager)
+        self.device = PolarDevice(mac_address=mac_address, manager=self)
         self.device.connect()
         
-        run()
         
-        super(PolarDataSource, self).__init__("Polar", 1)
+        BaseDataSource.__init__(self, "Polar", 1)
+        
+        self.run()
 
     def device_discovered(self, device):
         print("Discovered [%s] %s" % (device.mac_address, device.alias()))
