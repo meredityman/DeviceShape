@@ -1,14 +1,7 @@
-try:
-    import dbus
-    import dbus.mainloop.glib
-except ImportError:
-    import sys
-    print("Module 'dbus' not found")
-    print("Please run: sudo apt-get install python3-dbus")
-    print("See also: https://github.com/getsenic/gatt-python#installing-gatt-sdk-for-python")
-    sys.exit(1)
+from dbus_next.aio import MessageBus
 
 import re
+import asyncio
 
 from gi.repository import GObject
 
@@ -25,21 +18,25 @@ class DeviceManager:
     This class is intended to be subclassed to manage a specific set of GATT devices.
     """
 
-    def __init__(self, adapter_name):
+    async def __init__(self, adapter_name):
         self.listener = None
         self.adapter_name = adapter_name
+
+        self._bus = await MessageBus().connect()
         
+        introspection = await bus.introspect('org.bluez', '/org/bluez/' + adapter_name)
+        adapter_object = self._bus.get_proxy_object('org.bluez', '/org/bluez/' + adapter_name, introspection)
+
+         
+        introspection = await bus.introspect("org.bluez", "/")       
+        object_manager_object    = self._bus.get_proxy_object("org.bluez", "/", introspection)
         
-        self._bus = dbus.SystemBus()
-        try:
-            adapter_object = self._bus.get_object('org.bluez', '/org/bluez/' + adapter_name)
-        except dbus.exceptions.DBusException as e:
-            raise _error_from_dbus_error(e)
-        object_manager_object = self._bus.get_object("org.bluez", "/")
-        self._adapter = dbus.Interface(adapter_object, 'org.bluez.Adapter1')
-        self._adapter_properties = dbus.Interface(self._adapter, 'org.freedesktop.DBus.Properties')
-        self._object_manager = dbus.Interface(object_manager_object, "org.freedesktop.DBus.ObjectManager")
-        self._device_path_regex = re.compile('^/org/bluez/' + adapter_name + '/dev((_[A-Z0-9]{2}){6})$')
+        self._adapter            = adapter_object.get_interface( 'org.bluez.Adapter1')
+        self._adapter_properties = self._adapter.get_interface('org.freedesktop.DBus.Properties')
+        
+        self._object_manager     = object_manager_object.get_interface("org.freedesktop.DBus.ObjectManager")
+        
+        self._device_path_regex  = re.compile('^/org/bluez/' + adapter_name + '/dev((_[A-Z0-9]{2}){6})$')
         self._devices = {}
         self._discovered_devices = {}
         self._interface_added_signal = None
