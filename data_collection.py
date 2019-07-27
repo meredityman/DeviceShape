@@ -59,7 +59,7 @@ async def main():
     
     
     await adcSource.start();
-    await oscComunication.start_server()
+    #await oscComunication.start_server()
     await main_loop()
     
     oscComunication.close()
@@ -77,11 +77,11 @@ async def main_loop():
         
             if( power.is_low_power()) : print("Low Power!!")
         
-            oscComunication.update()
+            #oscComunication.update()
             print("loop")
-            logging_manager.write_data_source(adcSource)
+            #logging_manager.write_data_source(adcSource)
             
-            await asyncio.sleep(5)
+            await asyncio.sleep(1)
 
     except (KeyboardInterrupt, SystemExit):
         pass

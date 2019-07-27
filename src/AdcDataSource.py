@@ -19,7 +19,7 @@ class AdcDataSource():
 
     async def  start(self):
         self.running = True   
-        this.loop = asyncio.create_task(self.main_loop())
+        self.loop = asyncio.create_task(self.main_loop())
         
     async def main_loop(self):
     
@@ -31,4 +31,4 @@ class AdcDataSource():
             
             print(data)
             self.data.append(data)            
-            await asyncio.sleep( 1.0 / self.polling_rate)
+            await asyncio.sleep( 0.01)
