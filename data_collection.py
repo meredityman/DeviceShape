@@ -2,11 +2,12 @@ import os
 import time
 import asyncio
 
-from src.OSCManager    import *
-from src.AdcDataSource import AdcDataSource
-from src.DataLogger    import LoggingManager
-from src.Power         import Power
-from src.Config        import GetConfig
+from src.OSCManager      import *
+from src.AdcDataSource   import AdcDataSource
+from src.PolarDataSource import PolarDataSource
+from src.DataLogger      import LoggingManager
+from src.Power           import Power
+from src.Config          import GetConfig
 
 config_path = "device_config.csv"
 data_path = "/media/data"
@@ -26,7 +27,8 @@ def main():
     
     ## Setup Data Sources    
     dataSources = [
-        AdcDataSource()    
+        AdcDataSource(),  
+        PolarDataSource(config["PolarMAC"]),  
     ]
     
     

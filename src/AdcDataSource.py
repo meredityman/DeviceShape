@@ -1,9 +1,10 @@
 from ADCPi import ADCPi
 import asyncio
+import time
 
+from BaseDataSource import BaseDataSource
 
-
-class AdcDataSource():
+class AdcDataSource(BaseDataSource):
 
     sample_rates = {
     12 : 240,
@@ -14,7 +15,6 @@ class AdcDataSource():
 
 
     def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=14):
-        self.name = "ADC"
         self.adc = ADCPi(address, address2, rate)        
         self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
         
@@ -27,24 +27,10 @@ class AdcDataSource():
         if(sample_rate > max_sample_rate):
             print("Requested sample rate too high")
             
-        self.sample_rate = min(max_sample_rate, sample_rate)
+        sample_rate = min(max_sample_rate, sample_rate)
         
-        self.running = False;
-        self.data = []
+        BaseDataSource.__init__("ADC", sample_rate)
         
-        print("ADC Setup")
-
-
-    def clear_cache(self):
-        self.data = []
-
-    def get_data(self, clear_cache=False):
-        if(clear_cache):
-            data = self.data
-            self.clear_cache()
-            return data
-        else:    
-            return self.data
         
     async def main_loop(self):
         self.running = True 

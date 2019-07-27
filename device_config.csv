@@ -1,11 +1,11 @@
-ID,Color,MAC Address,IP,User,Pw
-1,Red,B8-27-EB-F5-5D-6A,192.168.0.100,pi,raspberry
-2,Orange,,,pi,raspberry
-3,Yellow,,,pi,raspberry
-4,Chartreuse,,,pi,raspberry
-5,Green,,,pi,raspberry
-6,Spring,,,pi,raspberry
-7,Ccyan,,,pi,raspberry
-8,Azure,,,pi,raspberry
-9,Blue,,,pi,raspberry
-10,Violet,,,pi,raspberry
+ID,Color,MAC Address,IP,PolarMAC, User,Pw
+1,Red,B8-27-EB-F5-5D-6A,192.168.0.100,A0:9E:1A:1A:EE:80,pi,raspberry
+2,Orange,,,,pi,raspberry
+3,Yellow,,,,pi,raspberry
+4,Chartreuse,,,,pi,raspberry
+5,Green,,,,pi,raspberry
+6,Spring,,,,pi,raspberry
+7,Ccyan,,,,pi,raspberry
+8,Azure,,,,pi,raspberry
+9,Blue,,,,pi,raspberry
+10,Violet,,,,pi,raspberry

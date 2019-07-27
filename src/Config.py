@@ -9,7 +9,8 @@ def GetConfig(config_path):
         "ID",
         "Color",
         "MAC Address",
-        "IP"]
+        "IP",
+        "PolarMAC"]
     
     with open(config_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
