@@ -52,8 +52,7 @@ class AdcDataSource():
             
             data = {}            
             for ch in self.channels:                
-                data[str(ch)] = self.adc.read_voltage(ch)
+                data[[time.time(), str(ch)]] = self.adc.read_voltage(ch)
             
-            print(data)
             self.data.append(data)            
             await asyncio.sleep( 1.0 / self.sample_rate)

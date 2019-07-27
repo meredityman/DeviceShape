@@ -54,10 +54,10 @@ class LoggingManager():
         
         for d in data:
             for key, values in d.items():
-                self.write_entry(name, key, values)
+                self.write_entry(name, key, values[0], values[1])
             
     
-    def write_entry(self, name, type, *values):
+    def write_entry(self, name, type, time, *values):
         
         if(not self._valid_to_write() ):
             print("Volume not valid for writing")
@@ -67,7 +67,7 @@ class LoggingManager():
             print( "Logging for " + name + " not setup")
             return
 
-        self.logging_channels[name].write_entry(type, *values)
+        self.logging_channels[name].write_entry(type, time, values)
     
 class LoggingChannel():
     file_period = 1200
@@ -86,11 +86,11 @@ class LoggingChannel():
         if(self.log_file is not None):
             self.log_file.close()
      
-    def write_entry(self, type, *values):
+    def write_entry(self, type, time, *values):
         self._open_new_file_iff()
         
         line = ""
-        line += time.strftime("%Y%m%d-%H%M%S")
+        line += time.strftime("%Y%m%d-%H%M%S", time)
         line += ", "
         line += type
         line += ", "
