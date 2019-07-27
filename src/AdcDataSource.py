@@ -4,11 +4,13 @@ import asyncio
 
 
 class AdcDataSource():
+
     sample_rates = {
     12 : 240,
     14 : 60,
     16 : 15,
-    18 : 3.75,
+    18 : 3.75
+    }
 
 
     def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=16):
@@ -43,13 +45,9 @@ class AdcDataSource():
             return data
         else:    
             return self.data
-
-    async def  start(self):
-        self.running = True   
-        self.loop = asyncio.create_task(self.main_loop())
         
     async def main_loop(self):
-    
+        self.running = True 
         while(self.running):
             
             data = {}            
