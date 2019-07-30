@@ -86,11 +86,11 @@ class LoggingChannel():
         if(self.log_file is not None):
             self.log_file.close()
      
-    def write_entry(self, type, time, *values):
+    def write_entry(self, type, dtime, *values):
         self._open_new_file_iff()
         
         line = ""
-        line += time.strftime("%Y%m%d-%H%M%S", time)
+        line += time.strftime("%Y%m%d-%H%M%S", dtime)
         line += ", "
         line += type
         line += ", "

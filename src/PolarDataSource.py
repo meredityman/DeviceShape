@@ -13,11 +13,8 @@ UUID_CHARACTER_HR_MEASURE   = '00002a37-0000-1000-8000-00805f9b34fb'
 class PolarDataSource(BaseDataSource):
 
     def __init__(self, mac_address):
-        gatt.DeviceManager.__init__(self, 'hci0')
-    
         self.mac_address = mac_address
-        
-
+        super(PolarDataSource, self).__init__("Polar", 1)
 
     def device_discovered(self, device):
         print("Discovered [%s] %s" % (device.mac_address, device.alias()))

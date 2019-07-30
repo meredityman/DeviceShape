@@ -27,7 +27,7 @@ def main():
     
     ## Setup Data Sources    
     dataSources = [
-        AdcDataSource(),  
+        #AdcDataSource(),  
         PolarDataSource(config["PolarMAC"]),  
     ]
     

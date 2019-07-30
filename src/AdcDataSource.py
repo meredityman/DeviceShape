@@ -14,7 +14,7 @@ class AdcDataSource(BaseDataSource):
     }
 
 
-    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=14):
+    def __init__(self, sample_rate = 10, address=0x68, address2=0x6a, rate=14):
         self.adc = ADCPi(address, address2, rate)        
         self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
         
@@ -38,7 +38,7 @@ class AdcDataSource(BaseDataSource):
             
             data = {}            
             for ch in self.channels:                
-                data[[time.time(), str(ch)]] = self.adc.read_voltage(ch)
+                data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
             
             self.data.append(data)            
             await asyncio.sleep( 1.0 / self.sample_rate)

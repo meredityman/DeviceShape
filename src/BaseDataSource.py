@@ -7,6 +7,7 @@ class BaseDataSource():
         self.name = name
         self.data = []
         self.running = False;
+        self.sample_rate = sample_rate
         print("{} Setup".format(self.name))
         
     def clear_cache(self):
