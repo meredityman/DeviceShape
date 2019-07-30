@@ -14,6 +14,7 @@ class PolarDataSource(BaseDataSource):
 
     def __init__(self, mac_address):
         self.mac_address = mac_address
+        self.connected = False
         super(PolarDataSource, self).__init__("Polar", 1)
 
     def device_discovered(self, device):
@@ -32,23 +33,44 @@ class PolarDataSource(BaseDataSource):
         self.running = True 
         
         async with BleakClient(self.mac_address) as client:
-            await client.is_connected()
+            self.connected = await client.is_connected()
 
-            svcs = await client.get_services()
-            print("Services:", svcs)
+            printServices(client)
 
             while(self.running):
                 
                 data = {}        
                 
-                await client.read_gatt_char(UUID_SERVICE_DEV_INFO)
-                print(
-                    "System ID: {0}".format(
-                        ":".join(["{:02x}".format(x) for x in system_id[::-1]])
-                    )
-                )
+                # await client.read_gatt_char(UUID_SERVICE_DEV_INFO)
+                # print(
+                    # "System ID: {0}".format(
+                        # ":".join(["{:02x}".format(x) for x in system_id[::-1]])
+                    # )
+                # )
                 
                 self.data.append(data)            
                 await asyncio.sleep( 1.0 / self.sample_rate)
-
-
+    
+    async def printServices(self, client):
+        for service in client.services:
+            print("[Service] {0}: {1}".format(service.uuid, service.description))
+            for char in service.characteristics:
+                if "read" in char.properties:
+                    try:
+                        value = bytes(await client.read_gatt_char(char.uuid))
+                    except Exception as e:
+                        value = str(e).encode()
+                else:
+                    value = None
+                print(
+                    "\t[Characteristic] {0}: ({1}) | Name: {2}, Value: {3} ".format(
+                        char.uuid, ",".join(char.properties), char.description, value
+                    )
+                )
+                for descriptor in char.descriptors:
+                    value = await client.read_gatt_descriptor(descriptor.handle)
+                    print(
+                        "\t\t[Descriptor] {0}: (Handle: {1}) | Value: {2} ".format(
+                            descriptor.uuid, descriptor.handle, bytes(value)
+                        )
+                    )
