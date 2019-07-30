@@ -1,4 +1,5 @@
 import time
+import asyncio
 from bleak import BleakClient
 from src.BaseDataSource import BaseDataSource
 
@@ -35,21 +36,24 @@ class PolarDataSource(BaseDataSource):
         async with BleakClient(self.mac_address) as client:
             self.connected = await client.is_connected()
 
-            printServices(client)
+            #await self.printServices(client)
+
+            await client.start_notify("00002a37-0000-1000-8000-00805f9b34fb", self.hr_handler)
 
             while(self.running):
                 
                 data = {}        
                 
-                # await client.read_gatt_char(UUID_SERVICE_DEV_INFO)
-                # print(
-                    # "System ID: {0}".format(
-                        # ":".join(["{:02x}".format(x) for x in system_id[::-1]])
-                    # )
-                # )
                 
                 self.data.append(data)            
+
+
                 await asyncio.sleep( 1.0 / self.sample_rate)
+
+
+    def hr_handler(self, sender, data):
+        print("HR: {}".format(int(data[1])))
+        self.data.append({ "HR" : (time.localtime(), int(data[1]) )})
     
     async def printServices(self, client):
         for service in client.services:
