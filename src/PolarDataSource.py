@@ -31,7 +31,12 @@ class PolarDataSource(BaseDataSource):
     async def main_loop(self):
         self.running = True 
         
-        with BleakClient(self.mac_address) as client:
+        async with BleakClient(self.mac_address) as client:
+            await client.is_connected()
+
+            svcs = await client.get_services()
+            print("Services:", svcs)
+
             while(self.running):
                 
                 data = {}        
