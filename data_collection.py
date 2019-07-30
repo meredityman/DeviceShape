@@ -8,13 +8,14 @@ from src.PolarDataSource import PolarDataSource
 from src.DataLogger      import LoggingManager
 from src.Power           import Power
 from src.Config          import GetConfig
+from src.AudioRecorder   import AudioRecorder 
 
 config_path = "device_config.csv"
 data_path = "/media/data"
 
 
 def main():
-    global oscComunication, logging_manager, dataSources, power
+    global oscComunication, logging_manager, dataSources, power, audio
     
     config = GetConfig(config_path)
     print(config)
@@ -31,6 +32,8 @@ def main():
         PolarDataSource(config["PolarMAC"]),  
     ]
     
+    audio = AudioRecorder(data_path)
+    
     
     ## Setup Logging
     logging_manager = LoggingManager(data_path)    
@@ -40,10 +43,11 @@ def main():
     
     loop = asyncio.get_event_loop()    
     
+    
     asyncio.ensure_future(main_loop())
+    asyncio.ensure_future(audio.main_loop())
     for dataSource in dataSources:
         asyncio.ensure_future(dataSource.main_loop())
-    
     
     try:    
         loop.run_forever()        
@@ -57,7 +61,7 @@ def main():
 
 
 async def main_loop():
-    global oscComunication, logging_manager, dataSources, power
+    global oscComunication, logging_manager, dataSources, power, audio
     
     while(True):
         #print("Loop")
