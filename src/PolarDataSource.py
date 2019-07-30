@@ -52,7 +52,7 @@ class PolarDataSource(BaseDataSource):
 
 
     def hr_handler(self, sender, data):
-        print("HR: {}".format(int(data[1])))
+        #print("HR: {}".format(int(data[1])))
         self.data.append({ "HR" : (time.localtime(), int(data[1]) )})
     
     async def printServices(self, client):

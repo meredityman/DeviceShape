@@ -62,7 +62,7 @@ def main():
 
 async def main_loop():
     global oscComunication, logging_manager, dataSources, power, audio
-    
+    await audio.startRecording(10)    
     while(True):
         #print("Loop")
         if( power.is_low_power()) : print("Low Power!!")

@@ -2,12 +2,15 @@ import asyncio
 import time            
 import pyaudio
 import wave
+import os
 
 class AudioRecorder():
-    chunk         = 1024  # Record in chunks of 1024 samples
+    chunk         = 4096  # Record in chunks of 1024 samples
     sample_format = pyaudio.paInt16  # 16 bits per sample
     channels      = 1
     fs            = 44100  # Record at 44100 samples per second
+    input_device  = 1
+
     
     def __init__(self, path):
         self.name = "Audio"
@@ -19,58 +22,77 @@ class AudioRecorder():
 
         
     def __del__(self):
-        self.stopRecording()
+        
         self.audio.terminate()
      
-    def startRecording(self, period):
-        if(self.recording) return
+    async def timer(self, time):
+        await asyncio.sleep(time)
+        return
+
+    async def setTimer(self, timer, callback):
+        await timer
+        await callback
+
+
+    async def startRecording(self, period=None):
+        if(self.recording) : return
     
         self.stream = self.audio.open(
-            format            = self.sample_format,
-            channels          = self.channels,
-            rate              = self.fs,
-            frames_per_buffer = self.chunk,
-            input             = True 
+            format             = self.sample_format,
+            channels           = self.channels,
+            rate               = self.fs,
+            frames_per_buffer  = self.chunk,
+            input_device_index = self.input_device,
+            input              = True
         )
         
         self.start_file_time = time.localtime()
         
         self.frames = []
-        self.recording = True
+        
+        if(self.stream.is_active()):
+            self.recording = True
+        else:
+            print("Stream not active")
+
+        if(period is not None):
+            await self.setTimer( self.timer(period), self.stopRecording())
+
+        
         
     async def stopRecording(self):
-        if( not self.recording ) return
-    
+        if( not self.recording ) : return
+        self.recording = False
         self.stream.stop_stream()
         self.stream.close()
-        
+        print("Recording Stopped")
         await self.saveAudio()
 
-            
+        
     async def main_loop(self):
         self.running = True 
         while(self.running):
         
-            if(self.recording)::
-                data = stream.read(chunk)
-                frames.append(data)
+            if(self.recording ):
+                data = self.stream.read(self.chunk, exception_on_overflow = False)
+                self.frames.append(data)
                 
-                await asyncio.sleep( self.chunk / self.fs )  
+                await asyncio.sleep( 0 )  
             else:                    
-                await asyncio.sleep( 1.0 / self.sample_rate )
+                await asyncio.sleep( 0.5 )
 
 
     async def saveAudio(self):
-    
+        print("Saving Audio")
         file_name = self.name + "_" + time.strftime("%Y%m%d-%H%M%S", self.start_file_time) + ".wav"
         
     
         filePath = os.path.join(self.path, file_name)
         
-        wf = wave.open(filename, 'wb')
-        wf.setnchannels(channels)
-        wf.setsampwidth(p.get_sample_size(sample_format))
-        wf.setframerate(fs)
-        wf.writeframes(b''.join(frames))
+        wf = wave.open(filePath, 'wb')
+        wf.setnchannels(self.channels)
+        wf.setsampwidth(self.audio.get_sample_size(self.sample_format))
+        wf.setframerate(self.fs)
+        wf.writeframes(b''.join(self.frames))
         wf.close()
         
