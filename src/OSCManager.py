@@ -6,24 +6,48 @@ import asyncio
 class OSCComunication:
     target_ip = ""
     ping_num  = 0
+    ping_rate = 2
     server = None
     client = None
 
     def __init__(self, host_ip, in_port = 3821):
         self.in_port = in_port
         self.host_ip = host_ip
-       
+        self.running = False
+        self.message_queue = []
+        
         self._setup_server()
     
     def close(self):
         self._send_exit()
         self.transport.close()
+        
+    def queue_message(self, address, msg):
+        if(self.client != None):
+            message_queue.insert(0, (address, msg))
 
-    def update(self):
-        if(self.client == None):
-            return
+    async def send_queue(self):
+        for (address, msg) in message_queue:
+            self.send(address, msg)
+            asyncio.sleep(0)
             
-        self._send_ping()
+        message_queue = []
+
+    async def main_loop(self):
+        self.running = True
+        
+        asyncio.ensure_future(ping_loop())
+        
+        while(self.running):
+            await self.send_queue()
+            
+    
+    async def ping_loop(self):
+        while(True):
+            if(self.client != None):
+                self._send_ping()
+                
+            await asyncio.sleep(self.ping_rate)
 
     def send(self, address, args):
         if(self.client == None):
@@ -32,7 +56,6 @@ class OSCComunication:
         print(address)
         print(args)
         self.client.send_message(address, args)
-            
     
     def _send_ping(self):
         self.send("/ping/", [ self.ping_num ])

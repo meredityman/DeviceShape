@@ -46,6 +46,8 @@ def main():
     
     asyncio.ensure_future(main_loop())
     asyncio.ensure_future(audio.main_loop())
+    asyncio.ensure_future(oscComunication.main_loop())
+    
     for dataSource in dataSources:
         asyncio.ensure_future(dataSource.main_loop())
     
@@ -66,8 +68,6 @@ async def main_loop():
     while(True):
         #print("Loop")
         if( power.is_low_power()) : print("Low Power!!")
-    
-        oscComunication.update()
         
         for dataSource in dataSources:
             logging_manager.write_data_source(dataSource)

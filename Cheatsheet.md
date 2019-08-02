@@ -13,3 +13,9 @@ Check connected devices
 ```
 hcitool -i hci0 con
 ```
+
+
+## Audio recording
+```
+alsamixer -c 0
+```
