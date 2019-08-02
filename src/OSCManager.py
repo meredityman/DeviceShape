@@ -24,23 +24,23 @@ class OSCComunication:
         
     def queue_message(self, address, msg):
         if(self.client != None):
-            message_queue.insert(0, (address, msg))
+            self.message_queue.insert(0, (address, msg))
 
     async def send_queue(self):
-        for (address, msg) in message_queue:
+        for (address, msg) in self.message_queue:
             self.send(address, msg)
             asyncio.sleep(0)
             
-        message_queue = []
+        self.message_queue = []
 
     async def main_loop(self):
         self.running = True
         
-        asyncio.ensure_future(ping_loop())
+        asyncio.ensure_future(self.ping_loop())
         
         while(self.running):
             await self.send_queue()
-            
+            await asyncio.sleep(0)
     
     async def ping_loop(self):
         while(True):
