@@ -63,13 +63,12 @@ class LoggingChannel():
     def write_entry(self, type, dtime, *values):
         self._open_new_file_iff()
         
-        line = ""
-        line += datetime.strftime("%Y%m%d-%H%M%S-%f", dtime)
-        line += ", "
-        line += type
-        line += ", "
-        line += ', '.join(map(str, values)) 
-        line += "\n"
+        
+        line = "{}, {}, {}\n".format(
+            datetime.strftime("%Y%m%d-%H%M%S-%f", dtime),
+            type,
+            ', '.join(map(str, values)) 
+        )
         
         self.log_file.write(line)
     
@@ -88,7 +87,7 @@ class LoggingChannel():
             
         self.start_file_time = datetime.now()
             
-        file_name = self.name + "_" + self.start_file_time.strftime("%Y%m%d-%H%M%S") + ".txt"
+        file_name = "{}_{}.txt".format(self.name, self.start_file_time.strftime("%Y%m%d-%H%M%S"))
         
         path_path = os.path.join(self.path, file_name)
         

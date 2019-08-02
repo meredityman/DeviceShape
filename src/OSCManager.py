@@ -27,7 +27,6 @@ class OSCComunication:
             self.queue_message(address, msg)
         
     def queue_message(self, address, msg):
-        print(address)
         if(self.client != None):
             self.message_queue.insert(0, (address, msg))
 

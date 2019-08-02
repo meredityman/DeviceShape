@@ -23,10 +23,7 @@ class Writer():
          
         messages = []
         for (key, value) in self.status.items():
-            messages.append(
-                ("/writer/" + key + "/",
-                value)
-            )
+            messages.append(("/writer/{}/".format(key),value))
             
         return messages
         
