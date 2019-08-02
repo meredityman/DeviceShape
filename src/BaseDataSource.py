@@ -2,12 +2,16 @@ import asyncio
 import time
 
 class BaseDataSource():
+    
 
-    def __init__(self, name, sample_rate) :
+    def __init__(self, name, sample_rate, is_setup = False) :
         self.name = name
         self.data = []
         self.running = False;
         self.sample_rate = sample_rate
+        
+        self.is_setup = is_setup        
+        
         print("{} Setup".format(self.name))
         
     def clear_cache(self):

@@ -12,12 +12,25 @@ class AdcDataSource(BaseDataSource):
     16 : 15,
     18 : 3.75
     }
+    
+    channels = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
-    def __init__(self, sample_rate = 10, address=0x68, address2=0x6a, rate=14):
-        self.adc = ADCPi(address, address2, rate)        
-        self.channels = [1, 2, 3, 4, 5, 6, 7, 8]
+    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=14):
+    
+        try:    
+            self.adc = ADCPi(address, address2, rate)
+            is_setup = True
+            
+        except OSError:
+            print("I2C not found at address")
+            is_setup = False
         
+        sample_rate = self.validate(sample_rate)
+        
+        super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
+    
+    def validate_sample_rate(self, rate):
         if rate in self.sample_rates:
             max_sample_rate = self.sample_rates[rate]
         else :
@@ -29,16 +42,16 @@ class AdcDataSource(BaseDataSource):
             
         sample_rate = min(max_sample_rate, sample_rate)
         
-        super(AdcDataSource, self).__init__("ADC", sample_rate)
-        
-        
     async def main_loop(self):
         self.running = True 
         while(self.running):
             
-            data = {}            
-            for ch in self.channels:                
-                data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
+            if( self.is_setup ):
             
-            self.data.append(data)            
+                data = {}            
+                for ch in self.channels:                
+                    data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
+                
+                self.data.append(data)            
+                
             await asyncio.sleep( 1.0 / self.sample_rate)
