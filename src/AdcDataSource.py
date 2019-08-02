@@ -16,7 +16,7 @@ class AdcDataSource(BaseDataSource):
     channels = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
-    def __init__(self, sample_rate = 10, address=0x68, address2=0x6a, bit_rate=14):
+    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, bit_rate=14):
     
         try:    
             self.adc = ADCPi(address, address2, bit_rate)
@@ -48,8 +48,9 @@ class AdcDataSource(BaseDataSource):
         pass
      
     async def loop_work(self):
-        data = {}
-        for ch in self.channels:                
-            data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
+        if(self.is_setup):
+            data = {}
+            for ch in self.channels:                
+                data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
         
-        self.data.append(data)            
+            self.data.append(data)            

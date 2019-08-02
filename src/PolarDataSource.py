@@ -40,7 +40,11 @@ class PolarDataSource(BaseDataSource):
             print("Device {} not found".format(self.mac_address))
             
     async def loop_work(self):    
-        raise pass  
+        self.is_setup = await self.client.is_connected()
+        
+        if(not self.is_setup):
+            await self.loop_setup() 
+  
 
         
     def hr_handler(self, sender, data):

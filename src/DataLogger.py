@@ -90,7 +90,7 @@ class LoggingChannel():
         self._open_new_file_iff()
         
         line = ""
-        line += time.strftime("%Y%m%d-%H%M%S", dtime)
+        line += time.strftime("%Y%m%d-%H%M%S-%f", dtime)
         line += ", "
         line += type
         line += ", "
