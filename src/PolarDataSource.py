@@ -1,6 +1,7 @@
 import time
 import asyncio
 from bleak import BleakClient
+from bleak.exc import  BleakError
 from src.BaseDataSource import BaseDataSource
 
 UUID_SERVICE_DEV_INFO = '0000180a-0000-1000-8000-00805f9b34fb'
@@ -24,12 +25,19 @@ class PolarDataSource(BaseDataSource):
 
     async def loop_setup(self):    
         try:
-            self.client = await BleakClient(self.mac_address)
-            await client.start_notify("00002a37-0000-1000-8000-00805f9b34fb", self.hr_handler)
+
+            self.client = BleakClient(self.mac_address)
+
+            await self.client.__aenter__()
+            await self.printServices(self.client)
+
+            self.is_setup = await self.client.is_connected() 
+
+            await self.client.start_notify("00002a37-0000-1000-8000-00805f9b34fb", self.hr_handler)
             
-            self.is_setup = await client.is_connected()
-        except
-            raise
+            #print("Device connected: {}".format(self.is_setup))
+        except BleakError:
+            print("Device {} not found".format(self.mac_address))
             
             
     def hr_handler(self, sender, data):

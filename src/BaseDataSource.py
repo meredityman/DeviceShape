@@ -43,7 +43,8 @@ class BaseDataSource():
             
     async def main_loop(self):
     
-        await self.loop_setup():    
+        await self.loop_setup()
+
         self.running = True 
         while(self.running):
         
