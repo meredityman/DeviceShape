@@ -92,17 +92,13 @@ class AudioRecorder():
 
     async def saveAudio(self):
         print("Saving Audio")
-<<<<<<< HEAD
-        file_name = "{}_{}.wav".format(self.name, self.start_file_time.strftime("%Y%m%d-%H%M%S"))
-=======
-        file_name = self.name + "_" + self.start_file_time.strftime("%Y%m%d-%H%M%S") + ".wav"
 
+        file_name = "{}_{}.wav".format(self.name, self.start_file_time.strftime("%Y%m%d-%H%M%S"))
 
         if(not self.writer._valid_to_write() ):
             print("Volume not valid for writing")
             return
->>>>>>> 24c89de3b8cb9159072b3f7ce967f1b1a7c60cd9
-        
+
     
         filePath = os.path.join(self.writer.path, file_name)
         
