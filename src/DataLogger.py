@@ -1,4 +1,4 @@
-import datetime   
+from datetime import datetime 
 import os 
 
 from src.Writer import Writer
