@@ -73,7 +73,7 @@ async def main_loop():
             
             
         oscComunication.queue_messages( power.get_status_mesages()         )
-        oscComunication.queue_messages( logging_manage.get_status_mesages())
+        oscComunication.queue_messages( logging_manager.get_status_mesages())
         
         await asyncio.sleep(1)
 

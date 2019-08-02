@@ -29,11 +29,13 @@ class LoggingManager():
         
         
     def get_status_mesages(self):
+        self.check_remaining_space()
+         
         messages = []
-        for (key, value) in status:
+        for (key, value) in self.status.items():
             messages.append(
-                "/logging/" + key + "/",
-                value
+                ("/logging/" + key + "/",
+                value)
             )
             
         return messages
