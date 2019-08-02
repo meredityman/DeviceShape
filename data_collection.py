@@ -54,10 +54,9 @@ def main():
     try:    
         loop.run_forever()        
     except (KeyboardInterrupt, SystemExit):
-        loop.close()
         oscComunication.close()
+        loop.close()
 
-    
     print("End")
 
 
@@ -67,10 +66,14 @@ async def main_loop():
     await audio.startRecording(10)    
     while(True):
         #print("Loop")
-        if( power.is_low_power()) : print("Low Power!!")
+        #if( power.is_low_power()) : print("Low Power!!")
         
         for dataSource in dataSources:
             logging_manager.write_data_source(dataSource)
+            
+            
+        oscComunication.queue_messages( power.get_status_mesages()         )
+        oscComunication.queue_messages( logging_manage.get_status_mesages())
         
         await asyncio.sleep(1)
 

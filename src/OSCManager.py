@@ -22,6 +22,10 @@ class OSCComunication:
         self._send_exit()
         self.transport.close()
         
+    def queue_messages(self, msgs):
+        for (address, msg) in msgs:
+            self.queue_message(address, msg)
+        
     def queue_message(self, address, msg):
         if(self.client != None):
             self.message_queue.insert(0, (address, msg))

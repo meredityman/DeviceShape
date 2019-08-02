@@ -27,6 +27,17 @@ class LoggingManager():
         new_logging_channel = LoggingChannel(name, self.path)
         self.logging_channels[name] = new_logging_channel
         
+        
+    def get_status_mesages(self):
+        messages = []
+        for (key, value) in status:
+            messages.append(
+                "/logging/" + key + "/",
+                value
+            )
+            
+        return messages
+        
     def check_remaining_space(self):
         status = self.status
     

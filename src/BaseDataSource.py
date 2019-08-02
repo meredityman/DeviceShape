@@ -28,6 +28,9 @@ class BaseDataSource():
         else:    
             return self.data
             
+    async def get_status_messages(self):
+        raise NotImplementedError()
+            
     async def loop_setup(self):
         raise NotImplementedError()
         
