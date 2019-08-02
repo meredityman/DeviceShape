@@ -4,6 +4,8 @@ import pyaudio
 import wave
 import os
 
+from src.Writer import Writer
+
 class AudioRecorder():
     chunk         = 4096  # Record in chunks of 1024 samples
     sample_format = pyaudio.paInt16  # 16 bits per sample

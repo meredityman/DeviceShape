@@ -2,13 +2,13 @@ import datetime
 import os 
 import shutil
 
-def class Writer():
+class Writer():
     min_space = 1e+9
     
     def __init__(self, path):
         self.path = path
     
-        self.base_status       = {
+        self.status       = {
              "valid"      : False,
              "total_space": None ,
              "used_space" : None ,
@@ -38,14 +38,14 @@ def class Writer():
     
     
     def check_remaining_space(self):
-    status = self.status
+        status = self.status
 
-    status["valid"] = os.path.isdir(self.path)
+        status["valid"] = os.path.isdir(self.path)
     
-    if(status["valid"]):
-        total, used, free = shutil.disk_usage(self.path)
+        if(status["valid"]):
+            total, used, free = shutil.disk_usage(self.path)
     
-        status["total_space"] = float(total)
-        status["used_space"]  = float(used)
-        status["free_space"]  = float(free)
-        status["remain_pct"]  = status["free_space"] / status["total_space"]
+            status["total_space"] = float(total)
+            status["used_space"]  = float(used)
+            status["free_space"]  = float(free)
+            status["remain_pct"]  = status["free_space"] / status["total_space"]

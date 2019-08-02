@@ -9,19 +9,14 @@ from src.DataLogger      import LoggingManager
 from src.Power           import Power
 from src.Config          import GetConfig
 from src.AudioRecorder   import AudioRecorder 
+from src.Writer          import Writer
 
 config_path = "device_config.csv"
 data_path = "/media/data"
 
 
 def main():
-    global 
-        oscComunication, 
-        logging_manager, 
-        dataSources, 
-        power, 
-        audio,
-        writer
+    global oscComunication, logging_manager, dataSources, power, audio, writer
     
     config = GetConfig(config_path)
     print(config)
@@ -70,13 +65,7 @@ def main():
 
 
 async def main_loop():
-    global 
-        oscComunication, 
-        logging_manager, 
-        dataSources, 
-        power, 
-        audio,
-        writer
+    global oscComunication, logging_manager, dataSources, power, audio, writer
         
         
     await audio.startRecording(10)    

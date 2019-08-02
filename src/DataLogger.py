@@ -1,6 +1,8 @@
 import datetime   
 import os 
 
+from src.Writer import Writer
+
 class LoggingManager():
 
     def __init__(self, writer):
@@ -17,7 +19,7 @@ class LoggingManager():
         if(not self.writer._valid_to_write() ):
             print("Volume not valid for writing")
             return
-    
+  
         name = dataSource.name
         data = dataSource.get_data();
         
@@ -41,8 +43,14 @@ class LoggingChannel():
     def __init__(self, name, writer):
         self.name = name
         self.writer = writer
+
+
+        if(not self.writer._valid_to_write() ):
+            print("Volume not valid for writing")
+            return
+
         
-        self.path = os.path.join(writer.path, name)
+        self.path = os.path.join(self.writer.path, name)
         os.makedirs(self.path, exist_ok = True)
 
         self.log_file = None
@@ -71,15 +79,16 @@ class LoggingChannel():
         
     def _open_new_file(self):
 
+        if(not self.writer._valid_to_write() ):
+            print("Volume not valid for writing")
+            return
+
         if(self.log_file is not None):
             self.log_file.close
             
         self.start_file_time = datetime.now()
             
-        file_name = 
-            self.name + "_" + 
-            self.start_file_time.strftime("%Y%m%d-%H%M%S") + 
-            ".txt"
+        file_name = self.name + "_" + self.start_file_time.strftime("%Y%m%d-%H%M%S") + ".txt"
         
         path_path = os.path.join(self.path, file_name)
         
