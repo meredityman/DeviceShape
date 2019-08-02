@@ -16,7 +16,6 @@ class BaseDataSource():
             print("{} Setup".format(self.name))
         else:
             print("{} Not Setup".format(self.name))
-
         
     def clear_cache(self):
         self.data = []
@@ -29,14 +28,27 @@ class BaseDataSource():
         else:    
             return self.data
             
+    async def loop_setup(self):    
+        pass
+        
+    async def loop_work(self):
+    
+        data = {
+            "X" : [time.time(), []]            
+        }   
+    
+        self.data.append(data) 
+        
+        pass
+            
     async def main_loop(self):
+    
+        await self.loop_setup():    
         self.running = True 
         while(self.running):
         
-            data = {
-                "X" : [time.time(), []]            
-            }   
-        
-            self.data.append(data) 
+            if( self.is_setup ):
+                await self.loop_work()
+
             await asyncio.sleep( 1.0 / self.sample_rate )
             

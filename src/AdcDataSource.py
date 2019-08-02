@@ -43,16 +43,9 @@ class AdcDataSource(BaseDataSource):
             
         return min(max_sample_rate, sample_rate)
         
-    async def main_loop(self):
-        self.running = True 
-        while(self.running):
-            
-            if( self.is_setup ):
-            
-                data = {}            
-                for ch in self.channels:                
-                    data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
-                
-                self.data.append(data)            
-                
-            await asyncio.sleep( 1.0 / self.sample_rate)
+    async def loop_work(self):
+        
+        for ch in self.channels:                
+            data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
+        
+        self.data.append(data)            

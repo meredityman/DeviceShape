@@ -22,35 +22,16 @@ class PolarDataSource(BaseDataSource):
         print("Discovered [%s] %s" % (device.mac_address, device.alias()))
 
 
-    def get_data(self, clear_cache=False):
-        if(clear_cache):
-            data = self.data
-            self.clear_cache()
-            return data
-        else:    
-            return self.data
-       
-    async def main_loop(self):
-        self.running = True 
-        
-        async with BleakClient(self.mac_address) as client:
-            self.connected = await client.is_connected()
-
-            #await self.printServices(client)
-
+    async def loop_setup(self):    
+        try:
+            self.client = await BleakClient(self.mac_address)
             await client.start_notify("00002a37-0000-1000-8000-00805f9b34fb", self.hr_handler)
-
-            while(self.running):
-                
-                data = {}        
-                
-                
-                self.data.append(data)            
-
-
-                await asyncio.sleep( 1.0 / self.sample_rate)
-
-
+            
+            self.is_setup = await client.is_connected()
+        except
+            raise
+            
+            
     def hr_handler(self, sender, data):
         #print("HR: {}".format(int(data[1])))
         self.data.append({ "HR" : (time.localtime(), int(data[1]) )})
