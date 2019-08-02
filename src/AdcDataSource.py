@@ -1,6 +1,6 @@
 from src.ADCPi import ADCPi
 import asyncio
-import datetime
+from datetime import datetime
 
 from src.BaseDataSource import BaseDataSource
 

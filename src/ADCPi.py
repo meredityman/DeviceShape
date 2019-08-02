@@ -18,7 +18,7 @@ except ImportError:
         raise ImportError("python-smbus or smbus2 not found")
 import re
 import platform
-import datetime
+import time
 
 
 class ADCPi:
