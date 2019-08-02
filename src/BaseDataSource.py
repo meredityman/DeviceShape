@@ -29,27 +29,19 @@ class BaseDataSource():
             return self.data
             
     async def loop_setup(self):    
-        pass
+        raise NotImplementedError()
         
-    async def loop_work(self):
-    
-        data = {
-            "X" : [time.time(), []]            
-        }   
-    
-        self.data.append(data) 
-        
-        pass
+    async def loop_work(self):    
+        raise NotImplementedError() 
             
     async def main_loop(self):
     
-        await self.loop_setup()
-
+        await self.loop_setup():    
         self.running = True 
         while(self.running):
         
             if( self.is_setup ):
-                await self.loop_work()
+                await self.loop_work() 
 
             await asyncio.sleep( 1.0 / self.sample_rate )
             

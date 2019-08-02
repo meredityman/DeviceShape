@@ -42,9 +42,13 @@ class AdcDataSource(BaseDataSource):
             print("Requested sample rate too high")
             
         return min(max_sample_rate, sample_rate)
-        
+     
+
+    async def loop_setup(self): 
+        pass
+     
     async def loop_work(self):
-        
+        data = {}
         for ch in self.channels:                
             data[str(ch)] = (time.localtime(),  self.adc.read_voltage(ch))
         
