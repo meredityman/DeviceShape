@@ -11,8 +11,12 @@ class BaseDataSource():
         self.sample_rate = sample_rate
         
         self.is_setup = is_setup        
-        
-        print("{} Setup".format(self.name))
+ 
+        if( self.is_setup ):
+            print("{} Setup".format(self.name))
+        else:
+            print("{} Not Setup".format(self.name))
+
         
     def clear_cache(self):
         self.data = []

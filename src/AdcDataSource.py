@@ -6,7 +6,7 @@ from src.BaseDataSource import BaseDataSource
 
 class AdcDataSource(BaseDataSource):
 
-    sample_rates = {
+    bit_rates = {
     12 : 240,
     14 : 60,
     16 : 15,
@@ -16,31 +16,32 @@ class AdcDataSource(BaseDataSource):
     channels = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
-    def __init__(self, sample_rate = 10, address=0x68, address2=0x69, rate=14):
+    def __init__(self, sample_rate = 10, address=0x68, address2=0x6a, bit_rate=14):
     
         try:    
-            self.adc = ADCPi(address, address2, rate)
+            self.adc = ADCPi(address, address2, bit_rate)
             is_setup = True
             
         except OSError:
             print("I2C not found at address")
             is_setup = False
         
-        sample_rate = self.validate(sample_rate)
+        sample_rate = self.validate_sample_rate(sample_rate, bit_rate)
         
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
     
-    def validate_sample_rate(self, rate):
-        if rate in self.sample_rates:
-            max_sample_rate = self.sample_rates[rate]
+    def validate_sample_rate(self, sample_rate, bit_rate):
+        if bit_rate in self.bit_rates:
+            max_sample_rate = self.bit_rates[bit_rate]
         else :
-            print("bit rate {} not permitted".format(rate))
-            rate = 16
+            print("bit rate {} not permitted".format(bit_rate))
+            bit_rate = 16
+            max_sample_rate = self.bit_rates[bit_rate]
         
         if(sample_rate > max_sample_rate):
             print("Requested sample rate too high")
             
-        sample_rate = min(max_sample_rate, sample_rate)
+        return min(max_sample_rate, sample_rate)
         
     async def main_loop(self):
         self.running = True 
