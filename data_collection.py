@@ -1,5 +1,5 @@
 import os
-import time
+import datetime
 import asyncio
 
 from src.OSCManager      import *
@@ -15,10 +15,18 @@ data_path = "/media/data"
 
 
 def main():
-    global oscComunication, logging_manager, dataSources, power, audio
+    global 
+        oscComunication, 
+        logging_manager, 
+        dataSources, 
+        power, 
+        audio,
+        writer
     
     config = GetConfig(config_path)
     print(config)
+    
+    writer = Writer(data_path)
     
     power = Power()
     
@@ -32,11 +40,11 @@ def main():
         PolarDataSource(config["PolarMAC"]),  
     ]
     
-    audio = AudioRecorder(data_path)
+    audio = AudioRecorder(writer)
     
     
     ## Setup Logging
-    logging_manager = LoggingManager(data_path)    
+    logging_manager = LoggingManager(writer)    
     for dataSource in dataSources:
         logging_manager.add_logging_channel(dataSource.name)
 
@@ -62,8 +70,17 @@ def main():
 
 
 async def main_loop():
-    global oscComunication, logging_manager, dataSources, power, audio
+    global 
+        oscComunication, 
+        logging_manager, 
+        dataSources, 
+        power, 
+        audio,
+        writer
+        
+        
     await audio.startRecording(10)    
+    
     while(True):
         #print("Loop")
         #if( power.is_low_power()) : print("Low Power!!")
@@ -72,8 +89,8 @@ async def main_loop():
             logging_manager.write_data_source(dataSource)
             
             
-        oscComunication.queue_messages( power.get_status_mesages()         )
-        oscComunication.queue_messages( logging_manager.get_status_mesages())
+        oscComunication.queue_messages( power.get_status_mesages() )
+        oscComunication.queue_messages( writer.get_status_mesages())
         
         await asyncio.sleep(1)
 

@@ -1,5 +1,5 @@
 import asyncio
-import time            
+import datetime            
 import pyaudio
 import wave
 import os
@@ -12,13 +12,19 @@ class AudioRecorder():
     input_device  = 1
 
     
-    def __init__(self, path):
+    def __init__(self, writer):
         self.name = "Audio"
         self.audio = pyaudio.PyAudio()
         self.recording = False
         
-        self.path = os.path.join(path, self.name)
-        os.makedirs(self.path, exist_ok = True)
+        self.writer = writer
+        
+        if(not self.writer._valid_to_write() ):
+            print("Volume not valid for writing")
+            return
+            
+        self.path = os.path.join(self.writer.path, self.name)
+        os.makedirs(self.writer.path, exist_ok = True)
 
         
     def __del__(self):
@@ -46,7 +52,7 @@ class AudioRecorder():
             input              = True
         )
         
-        self.start_file_time = time.localtime()
+        self.start_file_time = datetime.now()
         
         self.frames = []
         
@@ -84,10 +90,10 @@ class AudioRecorder():
 
     async def saveAudio(self):
         print("Saving Audio")
-        file_name = self.name + "_" + time.strftime("%Y%m%d-%H%M%S", self.start_file_time) + ".wav"
+        file_name = self.name + "_" + self.start_file_time.strftime("%Y%m%d-%H%M%S") + ".wav"
         
     
-        filePath = os.path.join(self.path, file_name)
+        filePath = os.path.join(self.writer.path, file_name)
         
         wf = wave.open(filePath, 'wb')
         wf.setnchannels(self.channels)
