@@ -51,6 +51,6 @@ class AdcDataSource(BaseDataSource):
         if(self.is_setup):
             data = {}
             for ch in self.channels:                
-                data[str(ch)] = (datetime.now(),  self.adc.read_voltage(ch))
+                data[str(ch)] = (datetime.now(),  self.adc.read_raw(ch))
         
             self.data.append(data)            
