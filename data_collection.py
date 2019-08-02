@@ -63,16 +63,13 @@ def main():
     print("End")
 
 
-
 async def main_loop():
     global oscComunication, logging_manager, dataSources, power, audio, writer
         
         
-    await audio.startRecording(10)    
+    #await audio.startRecording(10)    
     
     while(True):
-        #print("Loop")
-        #if( power.is_low_power()) : print("Low Power!!")
         
         for dataSource in dataSources:
             logging_manager.write_data_source(dataSource)
