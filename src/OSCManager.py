@@ -33,7 +33,7 @@ class OSCComunication:
     async def send_queue(self):
         for (address, msg) in self.message_queue:
             self.send(address, msg)
-            asyncio.sleep(0)
+            await asyncio.sleep(0)
             
         self.message_queue = []
 
