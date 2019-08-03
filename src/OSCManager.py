@@ -57,8 +57,8 @@ class OSCComunication:
         if(self.client == None):
             return
             
-        print(address)
-        print(args)
+        #print(address)
+        #print(args)
         self.client.send_message(address, args)
     
     def _send_ping(self):
