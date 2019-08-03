@@ -8,7 +8,7 @@ class Power():
         
         self.is_low_power()
     
-    def get_status_mesages(self):
+    def get_status_messages(self):
         return [("/power/low/", self.is_low_power())]    
     
     def is_low_power(self):

@@ -46,7 +46,7 @@ class PolarDataSource(BaseDataSource):
         else:
             self.bat_latest = await self.client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
   
-    async def get_status_messages(self):
+    def get_status_messages(self):
        return [
             ("/{}/connected/".format(self.name), self.is_setup)
             ("/{}/hr/".format(self.name)       , self.hr_latest)

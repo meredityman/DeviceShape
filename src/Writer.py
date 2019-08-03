@@ -18,7 +18,7 @@ class Writer():
         
         self.check_remaining_space()
     
-    def get_status_mesages(self):
+    def get_status_messages(self):
         self.check_remaining_space()
          
         messages = []

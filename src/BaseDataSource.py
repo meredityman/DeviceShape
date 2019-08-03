@@ -26,7 +26,7 @@ class BaseDataSource():
         else:    
             return self.data
             
-    async def get_status_messages(self):
+    def get_status_messages(self):
        return [("/{}/connected/".format(self.name), self.is_setup)]
             
     async def loop_setup(self):
