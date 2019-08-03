@@ -25,8 +25,8 @@ class LoggingManager():
         
         if(len(data) == 0 ) : return
         
-        for d in data:
-            for key, values in reversed(d.items()):
+        for d in reversed(data):
+            for key, values in d.items():
                 self.write_entry(name, key, values[0], values[1])       
     
     def write_entry(self, name, type, time, *values):

@@ -48,8 +48,8 @@ class PolarDataSource(BaseDataSource):
   
     def get_status_messages(self):
        return [
-            ("/{}/connected/".format(self.name), self.is_setup)
-            ("/{}/hr/".format(self.name)       , self.hr_latest)
+            ("/{}/connected/".format(self.name), self.is_setup),
+            ("/{}/hr/".format(self.name)       , self.hr_latest),
             ("/{}/battery/".format(self.name)  , self.bat_latest)        
         ]
         
