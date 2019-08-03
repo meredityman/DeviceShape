@@ -44,7 +44,7 @@ class PolarDataSource(BaseDataSource):
         if(not self.is_setup):
             await self.loop_setup() 
         else:
-            self.bat_latest = await client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
+            self.bat_latest = await self.client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
   
     async def get_status_messages(self):
        return [

@@ -73,7 +73,7 @@ async def main_loop():
         
         for dataSource in dataSources:
             logging_manager.write_data_source(dataSource)
-            oscComunication.queue_messages( dataSource.get_status_mesages() )
+            oscComunication.queue_messages( dataSource.get_status_messages() )
             
             
         oscComunication.queue_messages( power.get_status_mesages() )
