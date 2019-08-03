@@ -27,7 +27,7 @@ class BaseDataSource():
             return self.data
             
     async def get_status_messages(self):
-        raise NotImplementedError()
+       return [("/{}/connected/".format(self.name), self.is_setup)]
             
     async def loop_setup(self):
         raise NotImplementedError()

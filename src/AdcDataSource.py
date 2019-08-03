@@ -30,6 +30,7 @@ class AdcDataSource(BaseDataSource):
         
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
     
+    
     def validate_sample_rate(self, sample_rate, bit_rate):
         if bit_rate in self.bit_rates:
             max_sample_rate = self.bit_rates[bit_rate]

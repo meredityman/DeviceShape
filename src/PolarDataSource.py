@@ -4,11 +4,6 @@ from bleak import BleakClient
 from bleak.exc import  BleakError
 from src.BaseDataSource import BaseDataSource
 
-UUID_SERVICE_DEV_INFO = '0000180a-0000-1000-8000-00805f9b34fb'
-UUID_SERVICE_BATT     = '0000180f-0000-1000-8000-00805f9b34fb'
-UUID_SERVICE_HR       = '0000180d-0000-1000-8000-00805f9b34fb'
-
-UUID_CHARACTER_FIRMWARE_VER = '00002a26-0000-1000-8000-00805f9b34fb'
 UUID_CHARACTER_BAT_LVL      = '00002a19-0000-1000-8000-00805f9b34fb'
 UUID_CHARACTER_HR_MEASURE   = '00002a37-0000-1000-8000-00805f9b34fb'
 
@@ -17,6 +12,10 @@ class PolarDataSource(BaseDataSource):
     def __init__(self, mac_address):
         self.mac_address = mac_address
         self.connected = False
+        
+        self.hr_latest  = -1
+        self.bat_latest = -1
+        
         super(PolarDataSource, self).__init__("Polar", 1)
 
     def device_discovered(self, device):
@@ -33,7 +32,7 @@ class PolarDataSource(BaseDataSource):
 
             self.is_setup = await self.client.is_connected() 
 
-            await self.client.start_notify("00002a37-0000-1000-8000-00805f9b34fb", self.hr_handler)
+            await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
             
             #print("Device connected: {}".format(self.is_setup))
         except BleakError:
@@ -44,12 +43,20 @@ class PolarDataSource(BaseDataSource):
         
         if(not self.is_setup):
             await self.loop_setup() 
+        else:
+            self.bat_latest = await client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
   
-
+    async def get_status_messages(self):
+       return [
+            ("/{}/connected/".format(self.name), self.is_setup)
+            ("/{}/hr/".format(self.name)       , self.hr_latest)
+            ("/{}/battery/".format(self.name)  , self.bat_latest)        
+        ]
         
     def hr_handler(self, sender, data):
         #print("HR: {}".format(int(data[1])))
-        self.data.append({ "HR" : (datetime.now(), int(data[1]) )})
+        self.hr_latest = int(data[1])
+        self.data.append({ "HR" : (datetime.now(), self.hr_latest  )})
     
     async def printServices(self, client):
         for service in client.services:
