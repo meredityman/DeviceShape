@@ -10,18 +10,33 @@ def GetConfig(config_path):
         "Color",
         "MAC Address",
         "IP",
-        "PolarMAC"]
-    
-    with open(config_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        
-        for row in reader:
+        "PolarMAC"
+    ]
 
+    with open(config_path,  newline='') as csvfile:
+
+        csv.register_dialect(
+             'Config',
+             quotechar='"',
+             skipinitialspace=True,
+             quoting=csv.QUOTE_NONE,
+             lineterminator='\n',
+             strict=True
+        )
+
+        reader = csv.DictReader(csvfile, dialect='Config')
+
+        for row in reader:
+ 
             for field in field_names:
+
                 if(field not in row.keys()):
-                    raise Exception("Row does not contain expected field " + field)
+
+                    print("Row does not contain expected field {}".format(field))
+                    raise Exception()
+
 
             if( row["MAC Address"].casefold() == wlan_mac.casefold()):
                 return row
-    
-    raise Exception("Entry for this device not found") 
+
+    raise Exception("Entry for this device not found")
