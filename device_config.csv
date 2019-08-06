@@ -1,15 +1,15 @@
-ID, Color     , MAC Address      , IP           , PolarMAC         
-1 , Prototype , B8-27-EB-F5-5D-6A, 192.168.0.100, A0:9E:1A:1A:EE:80
-2 , Grey      , B8-27-EB-B2-AA-07, 192.168.0.101,                  
-3 , Orange    ,                  ,              ,                  
-4 , Yellow    ,                  ,              ,                  
-5 , Pink      ,                  ,              ,                  
-6 , Purple    ,                  ,              ,                  
-7 , Red       ,                  ,              ,                  
-8 , Green     ,                  ,              ,                  
-9 , Lime Green,                  ,              ,                  
-10, Dark Blue ,                  ,              ,                  
-11, Light Blue,                  ,              ,                  
-12, Spare     ,                  ,              ,                  
+ID, Color,     MAC Address,       IP,            PolarMAC         
+1,  Prototype, B8-27-EB-F5-5D-6A, 192.168.0.100, A0:9E:1A:1A:EE:80
+2,  Grey,      B8-27-EB-B2-AA-07, 192.168.0.101,                  
+3,  Orange,,,                  
+4,  Yellow,,,                  
+5,  Pink,,,                  
+6,  Purple,,,                  
+7,  Red,,,                  
+8,  Green,,,                  
+9,  Lime Green,,,                  
+10, Dark Blue,,,                  
+11, Light Blue,,,                  
+12, Spare,,,                  
 
 

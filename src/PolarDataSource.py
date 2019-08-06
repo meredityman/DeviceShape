@@ -5,7 +5,7 @@ from bleak.exc import  BleakError
 from src.BaseDataSource import BaseDataSource
 
 UUID_CHARACTER_BAT_LVL      = '00002a19-0000-1000-8000-00805f9b34fb'
-UUID_CHARACTER_HR_MEASURE   = '00002a37-0000-1000-8000-00805f9b34fb'
+UUID_CHARACTER_HR_MEASURE   = ''
 
 class PolarDataSource(BaseDataSource):
 
