@@ -24,7 +24,7 @@ class PolarDataSource(BaseDataSource):
 
     async def loop_setup(self):    
         try:
-
+            print("Polar: try connect...")
             self.client = BleakClient(self.mac_address)
 
             await self.client.__aenter__()
@@ -34,7 +34,7 @@ class PolarDataSource(BaseDataSource):
 
             await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
             
-            #print("Device connected: {}".format(self.is_setup))
+            print("Device connected: {}".format(self.is_setup))
         except BleakError:
             print("Device {} not found".format(self.mac_address))
             
@@ -54,7 +54,7 @@ class PolarDataSource(BaseDataSource):
         ]
         
     def hr_handler(self, sender, data):
-        #print("HR: {}".format(int(data[1])))
+        print("HR: {}".format(int(data[1])))
         self.hr_latest = int(data[1])
         self.data.append({ "HR" : (datetime.now(), self.hr_latest  )})
     
