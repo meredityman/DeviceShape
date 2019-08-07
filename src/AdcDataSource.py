@@ -53,5 +53,13 @@ class AdcDataSource(BaseDataSource):
             data = {}
             for ch in self.channels:                
                 data[str(ch)] = (datetime.now(),  self.adc.read_raw(ch))
-        
+                
+            
+            dstr = ""
+
+            for ch, val in data.items():
+               dstr += "{} {}\t".format(ch, val[1])
+
+            print(dstr, end='\r')
+            
             self.data.append(data)            

@@ -32,7 +32,7 @@ def main():
     ## Setup Data Sources    
     dataSources = [
         AdcDataSource(),  
-        PolarDataSource(config["PolarMAC"]),  
+        #PolarDataSource(config["PolarMAC"]),  
     ]
     
     audio = AudioRecorder(writer)
