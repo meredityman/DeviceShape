@@ -58,7 +58,7 @@ class AudioRecorder():
 
     async def startRecording(self, period=None):
         if(self.recording) : return
-        print("Staring recording")
+        print("Starting recording")
         self.stream = self.audio.open(
             format             = self.sample_format,
             channels           = self.channels,
