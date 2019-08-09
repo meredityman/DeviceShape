@@ -11,7 +11,7 @@ from src.Config          import GetConfig
 from src.AudioRecorder   import AudioRecorder 
 from src.Writer          import Writer
 
-config_path = "device_config.csv"
+config_path = "./device_config.csv"
 data_path = "/media/data"
 
 
