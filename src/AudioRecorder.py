@@ -4,7 +4,11 @@ import pyaudio
 import wave
 import os
 
+import RPi.GPIO as GPIO
+
 from src.Writer import Writer
+
+AUDIO_BUTTON_GPIO = 12
 
 class AudioRecorder():
     chunk         = 4096  # Record in chunks of 1024 samples
@@ -13,7 +17,8 @@ class AudioRecorder():
     fs            = 44100  # Record at 44100 samples per second
     input_device  = 1
 
-    
+
+ 
     def __init__(self, writer):
         self.name = "Audio"
         self.audio = pyaudio.PyAudio()
@@ -27,6 +32,15 @@ class AudioRecorder():
             
         self.path = os.path.join(self.writer.path, self.name)
         os.makedirs(self.writer.path, exist_ok = True)
+
+        assert(GPIO.getmode() == GPIO.BCM )
+
+        GPIO.setup(AUDIO_BUTTON_GPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+        self.lastButtonDown = self.buttonDown = self.isButtonDown()
+
+    def isButtonDown(self):
+        return not GPIO.input(AUDIO_BUTTON_GPIO)
 
         
     def __del__(self):
@@ -44,7 +58,7 @@ class AudioRecorder():
 
     async def startRecording(self, period=None):
         if(self.recording) : return
-    
+        print("Staring recording")
         self.stream = self.audio.open(
             format             = self.sample_format,
             channels           = self.channels,
@@ -81,13 +95,23 @@ class AudioRecorder():
         self.running = True 
         while(self.running):
         
+            self.buttonDown = self.isButtonDown()
+
+            if(self.buttonDown and not self.lastButtonDown):
+                if(self.recording):
+                    await self.stopRecording()
+                else:
+                    await self.startRecording()
+
+            self.lastButtonDown = self.buttonDown
+
             if(self.recording ):
                 data = self.stream.read(self.chunk, exception_on_overflow = False)
                 self.frames.append(data)
                 
                 await asyncio.sleep( 0 )  
             else:                    
-                await asyncio.sleep( 0.5 )
+                await asyncio.sleep( 0 )
 
 
     async def saveAudio(self):

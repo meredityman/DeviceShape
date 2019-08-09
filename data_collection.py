@@ -32,7 +32,7 @@ def main():
     ## Setup Data Sources    
     dataSources = [
         AdcDataSource(),  
-        #PolarDataSource(config["PolarMAC"]),  
+        PolarDataSource(config["PolarMAC"])  
     ]
     
     audio = AudioRecorder(writer)
@@ -67,7 +67,7 @@ async def main_loop():
     global oscComunication, logging_manager, dataSources, power, audio, writer
         
         
-    #await audio.startRecording(10)    
+   # await audio.startRecording(10)    
     
     while(True):
         
