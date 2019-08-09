@@ -52,8 +52,10 @@ class AdcDataSource(BaseDataSource):
         if(self.is_setup):
             data = {}
             for ch in self.channels:                
-                data[str(ch)] = (datetime.now(),  self.adc.read_raw(ch))
-                
+                try:
+                    data[str(ch)] = (datetime.now(),  self.adc.read_raw(ch))
+                except TimeoutError:
+                    pass
             
             dstr = ""
 
