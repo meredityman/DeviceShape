@@ -26,10 +26,7 @@ class AudioRecorder():
         
         self.writer = writer
         
-        if(not self.writer._valid_to_write() ):
-            print("Volume not valid for writing")
-            return
-            
+
         self.path = os.path.join(self.writer.path, self.name)
         os.makedirs(self.writer.path, exist_ok = True)
 
