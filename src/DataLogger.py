@@ -10,7 +10,8 @@ class LoggingManager():
         self.writer = writer
 
     def add_logging_channel(self, name):
-    
+        if(not self.writer._valid_to_write() ): return
+        
         new_logging_channel = LoggingChannel(name, self.writer)
         self.logging_channels[name] = new_logging_channel
         
