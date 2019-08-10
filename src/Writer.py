@@ -37,7 +37,7 @@ class Writer():
     def check_remaining_space(self):
         status = self.status
 
-        status["valid"] = os.path.isdir(self.path)
+        status["valid"] = os.access(self.path, os.W_OK)
     
         if(status["valid"]):
             total, used, free = shutil.disk_usage(self.path)
