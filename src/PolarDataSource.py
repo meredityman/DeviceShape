@@ -15,6 +15,7 @@ class PolarDataSource(BaseDataSource):
         
         self.hr_latest  = -1
         self.bat_latest = -1
+        self.client = None
         
         super(PolarDataSource, self).__init__("Polar", 1)
 
@@ -23,15 +24,16 @@ class PolarDataSource(BaseDataSource):
 
 
     async def loop_setup(self):    
+        if(self.mac_address == ""):
+            print("No mac address set for Polar")
+            return
+
         try:
-            print("Polar: try connect...")
+            print("Polar ({}): try connect...".format(self.mac_address))
             self.client = BleakClient(self.mac_address)
 
             await self.client.__aenter__()
             await self.printServices(self.client)
-
-            self.is_setup = await self.client.is_connected() 
-
             await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
             
             print("Device connected: {}".format(self.is_setup))
@@ -39,8 +41,13 @@ class PolarDataSource(BaseDataSource):
             print("Device {} not found".format(self.mac_address))
             
     async def loop_work(self):    
-        self.is_setup = await self.client.is_connected()
-        
+        if(self.client is None) : return
+
+        try:
+           self.is_setup = await self.client.is_connected()
+        except:
+           print("???")
+
         if(not self.is_setup):
             await self.loop_setup() 
         else:

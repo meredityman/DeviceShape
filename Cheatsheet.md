@@ -7,11 +7,11 @@ i2cdetect -y 1
 
 Scan for bluetooth devices
 ```
-hcitool -i hci0 lescan 
+sudo hcitool -i hci0 lescan 
 ```
 Check connected devices
 ```
-hcitool -i hci0 con
+sudo hcitool -i hci0 con
 ```
 
 
