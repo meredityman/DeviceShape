@@ -19,7 +19,7 @@ class PolarDataSource(BaseDataSource):
         self.bat_latest = -1
         self.client = None
         
-        super(PolarDataSource, self).__init__("Polar", 1)
+        super(PolarDataSource, self).__init__("Polar", 1, False)
 
     def device_discovered(self, device):
         print("Discovered [%s] %s" % (device.mac_address, device.alias()))
