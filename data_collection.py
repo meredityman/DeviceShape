@@ -18,8 +18,15 @@ data_path = "/media/data"
 def main():
     global oscComunication, logging_manager, dataSources, power, audio, writer
     
+    print("---------------------------------------------")
+    print("Starting Program [{}]".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+    print("---------------------------------------------")
+    
     config = GetConfig(config_path)
-    print(config)
+    
+    for key, value in config.items():
+        print("{}\t{}".format(key, value))
+    print("---------------------------------------------")
     
     writer = Writer(data_path)
     

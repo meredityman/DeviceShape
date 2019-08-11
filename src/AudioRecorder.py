@@ -17,7 +17,6 @@ class AudioRecorder():
     fs            = 44100  # Record at 44100 samples per second
     input_device  = 1
 
-
  
     def __init__(self, writer):
         self.name = "Audio"
@@ -28,7 +27,7 @@ class AudioRecorder():
         
 
         self.path = os.path.join(self.writer.path, self.name)
-        os.makedirs(self.writer.path, exist_ok = True)
+        os.makedirs(self.path, exist_ok = True)
 
         assert(GPIO.getmode() == GPIO.BCM )
 
