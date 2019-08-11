@@ -26,7 +26,7 @@ class PolarDataSource(BaseDataSource):
     async def close(self):
         if(self.client is not None):
             print("Polar ({}): disconnecting".format(self.mac_address))
-            self.client.disconnect():
+            self.client.disconnect()
         
     async def loop_setup(self):    
         if(self.mac_address == ""):

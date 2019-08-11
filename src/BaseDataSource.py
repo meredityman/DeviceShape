@@ -49,5 +49,6 @@ class BaseDataSource():
 
                 await asyncio.sleep( 1.0 / self.sample_rate )
             except (KeyboardInterrupt, SystemExit):
+                print("Here")
                 raise
             
