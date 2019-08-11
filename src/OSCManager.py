@@ -1,6 +1,7 @@
 from pythonosc.dispatcher import Dispatcher
 from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.udp_client import SimpleUDPClient
+from datetime import datetime, MINYEAR
 import asyncio
 
 class OSCComunication:
@@ -15,8 +16,10 @@ class OSCComunication:
         self.host_ip = host_ip
         self.running = False
         self.message_queue = []
-        
+        self.last_ping_time = datetime.min
+
         self._setup_server()
+        self.connected = False
     
     def close(self):
         self._send_exit()
@@ -45,6 +48,10 @@ class OSCComunication:
         while(self.running):
             await self.send_queue()
             await asyncio.sleep(0)
+
+            if((self.last_ping_time - datetime.now()).seconds > 10 and self.connected):
+               self.connected = False
+               self.dispatcher.map("/handshake/", self._handshake_handler) 
     
     async def ping_loop(self):
         while(True):
@@ -101,10 +108,12 @@ class OSCComunication:
         
         self.dispatcher.unmap("/handshake/", self._handshake_handler)
         self._setup_sender()
+
+        self.connected = True
             
 
     def _ping_handler(self, address, osc_arguments):
-        print("Ping received")
+        self.last_ping_time = datetime.now() 
         pass
         
     def _start_handler(self, address, osc_arguments):

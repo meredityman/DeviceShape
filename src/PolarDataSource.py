@@ -61,6 +61,7 @@ class PolarDataSource(BaseDataSource):
 
         self.connecting = False
 
+
     def disconnect_handler(self):
         print("Polar ({}): disconnected".format(self.mac_address))
         self.connected = False
@@ -71,7 +72,7 @@ class PolarDataSource(BaseDataSource):
             await self.client.write_gatt_char(UUID_PWM_CONTROL_POINT, bytearray(b'\x01\x02'), response = True)
 
             await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
-            await self.client.set_disconnected_callback(self.disconnect_handler)
+            #await self.client.set_disconnected_callback(self.disconnect_handler)
 
             self.is_setup = True
             print("Polar ({}): setup".format(self.mac_address))
@@ -82,8 +83,8 @@ class PolarDataSource(BaseDataSource):
         if(self.client is None) : return
 
         self.connected = await self.client.is_connected()
- 
-        if(not self.connected):
+
+        if(not self.connected ):
             await self.loop_setup() 
         else:
             self.bat_latest = await self.client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
