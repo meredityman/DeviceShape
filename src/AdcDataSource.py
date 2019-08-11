@@ -29,7 +29,10 @@ class AdcDataSource(BaseDataSource):
         sample_rate = self.validate_sample_rate(sample_rate, bit_rate)
         
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
-    
+
+
+    async def close(self):
+        pass
     
     def validate_sample_rate(self, sample_rate, bit_rate):
         if bit_rate in self.bit_rates:

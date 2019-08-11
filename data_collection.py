@@ -25,7 +25,7 @@ def main():
     config = GetConfig(config_path)
     
     for key, value in config.items():
-        print("{}\t{}".format(key, value))
+        print("{}\t\t{}".format(key, value))
     print("---------------------------------------------")
     
     writer = Writer(data_path, config)
@@ -59,7 +59,7 @@ def main():
     asyncio.ensure_future(oscComunication.main_loop())
     
     for dataSource in dataSources:
-        dataSource.start())
+        dataSource.start()
     
     loop.run_forever()
     
@@ -74,7 +74,8 @@ async def main_loop():
     print("Starting main loop")
     print("---------------------------------------------")
 
-    while(True):
+    running = True
+    while(running):
         try:
             for dataSource in dataSources:
                 logging_manager.write_data_source(dataSource)
@@ -90,7 +91,7 @@ async def main_loop():
                 await dataSource.close()
         
             oscComunication.close()
-            loop.close()
+            running = False
 
 
 

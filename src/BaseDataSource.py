@@ -18,7 +18,7 @@ class BaseDataSource():
     def clear_cache(self):
         self.data = []
      
-    async def start(self):
+    def start(self):
         self.task = asyncio.ensure_future(self._main_loop())
      
     def get_data(self, clear_cache=False):
@@ -53,5 +53,6 @@ class BaseDataSource():
                 await asyncio.sleep( 1.0 / self.sample_rate )
             except (KeyboardInterrupt, SystemExit):
                 self.running = False
-                self.close()
+                await self.close()
+                raise
             

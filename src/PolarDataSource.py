@@ -6,6 +6,8 @@ from src.BaseDataSource import BaseDataSource
 
 UUID_CHARACTER_BAT_LVL      = '00002a19-0000-1000-8000-00805f9b34fb'
 UUID_CHARACTER_HR_MEASURE   = '00002a37-0000-1000-8000-00805f9b34fb'
+UUID_PWM_CONTROL_POINT      = 'fb005c81-02e7-f387-1cad-8acd2d8df0c8'
+UUID_PWM_DATA               = 'fb005c82-02e7-f387-1cad-8acd2d8df0c8'
 
 class PolarDataSource(BaseDataSource):
 
@@ -43,8 +45,7 @@ class PolarDataSource(BaseDataSource):
             self.client = BleakClient(self.mac_address)
 
             await self.client.__aenter__()
-            await asyncio.wait_for(self.printServices(self.client), timeout=15)
-
+            #await self.printServices(self.client)
             print("Polar ({}): connected".format(self.mac_address))
         except BleakError as e:
             print("Polar ({}): failed to connect\n{}".format(self.mac_address, e))
@@ -57,24 +58,31 @@ class PolarDataSource(BaseDataSource):
         if(self.connected):
             await self.start_notify()
 
+
         self.connecting = False
 
-    async def start_notify(self):
-        try:
-            await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
-            self.is_setup = True
-        except BleakError as e:
-            print(e)
+    def disconnect_handler(self):
+        print("Polar ({}): disconnected".format(self.mac_address))
+        self.connected = False
 
-            
+    async def start_notify(self):
+            #await self.client.start_notify(UUID_PWN_DATA            , self.data_handler)
+
+            await self.client.write_gatt_char(UUID_PWM_CONTROL_POINT, bytearray(b'\x01\x02'), response = True)
+
+            await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
+            await self.client.set_disconnected_callback(self.disconnect_handler)
+
+            self.is_setup = True
+            print("Polar ({}): setup".format(self.mac_address))
+        
+ 
+
     async def loop_work(self):    
         if(self.client is None) : return
 
-        try:
-           self.connected = await self.client.is_connected()
-        except:
-           pass
-
+        self.connected = await self.client.is_connected()
+ 
         if(not self.connected):
             await self.loop_setup() 
         else:
@@ -92,6 +100,11 @@ class PolarDataSource(BaseDataSource):
         print("HR: {}".format(int(data[1])))
         self.hr_latest = int(data[1])
         self.data.append({ "HR" : (datetime.now(), self.hr_latest  )})
+
+    def data_handler(self, sender, data):
+        print("hey")
+        #print("Data: {}".format(data))
+
     
     async def printServices(self, client):
         for service in client.services:
