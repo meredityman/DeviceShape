@@ -17,6 +17,8 @@ class AudioRecorder():
     fs            = 44100  # Record at 44100 samples per second
     input_device  = 1
 
+    file_split_time = 30
+    max_record_time = 600
  
     def __init__(self, writer):
         self.name = "Audio"
@@ -63,7 +65,7 @@ class AudioRecorder():
         )
         
         self.start_file_time = datetime.now()
-        
+        self.start_time = self.start_file_time
         self.frames = []
         
         if(self.stream.is_active()):
@@ -72,6 +74,7 @@ class AudioRecorder():
             print("Stream not active")
 
         if(period is not None):
+            period = min(period, max_record_time)
             await self.setTimer( self.timer(period), self.stopRecording())
 
         
@@ -103,6 +106,15 @@ class AudioRecorder():
                 data = self.stream.read(self.chunk, exception_on_overflow = False)
                 self.frames.append(data)
                 
+                record_time = (datetime.now() - self.start_time).seconds
+                file_time   = (datetime.now() - self.start_file_time).seconds
+                
+                if(record_time > self.max_record_time):
+                    self.stopRecording()
+                elif( file_time > self.file_split_time ):
+                    self.start_file_time = datetime.now()
+                    await self.saveAudio()
+
                 await asyncio.sleep( 0 )  
             else:                    
                 await asyncio.sleep( 0 )
