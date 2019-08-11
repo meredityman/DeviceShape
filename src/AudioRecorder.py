@@ -120,7 +120,7 @@ class AudioRecorder():
             return
 
     
-        filePath = os.path.join(self.writer.path, file_name)
+        filePath = os.path.join(self.path, file_name)
         
         wf = wave.open(filePath, 'wb')
         wf.setnchannels(self.channels)

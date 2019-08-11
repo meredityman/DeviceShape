@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime
 import asyncio
 
 from src.OSCManager      import *
@@ -19,7 +19,7 @@ def main():
     global oscComunication, logging_manager, dataSources, power, audio, writer
     
     print("---------------------------------------------")
-    print("Starting Program [{}]".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+    print("Starting Program [{}]".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
     print("---------------------------------------------")
     
     config = GetConfig(config_path)

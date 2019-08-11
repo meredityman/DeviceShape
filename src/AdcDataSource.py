@@ -50,18 +50,18 @@ class AdcDataSource(BaseDataSource):
      
     async def loop_work(self):
         if(self.is_setup):
-            data = {}
+            data = []
             for ch in self.channels:                
                 try:
-                    data[str(ch)] = (datetime.now(),  self.adc.read_raw(ch))
+                    data.append( self.adc.read_raw(ch) )
                 except TimeoutError:
                     pass
             
-            dstr = ""
-
-            for ch, val in data.items():
-               dstr += "{} {}\t".format(ch, val[1])
-
-            print(dstr, end='\r')
             
-            self.data.append(data)            
+            #dstr = ""
+            #for ch, val in data.items():
+            #   dstr += "{} {}\t".format(ch, val[1])
+
+            #print(dstr, end='\r')
+            
+            self.data.append({"ADC" : (datetime.now(), data) }) 
