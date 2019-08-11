@@ -40,13 +40,15 @@ class AdcDataSource(BaseDataSource):
         rDown = not GPIO.input(LEFT_GPIO)
         lDown = not GPIO.input(RIGHT_GPIO)
         
-        if(rDown && lDown):
+        if(rDown and lDown):
             print("ADC GPIO Error")
             is_setup = False
         elif(rDown):
             self.orientation = 'f'
         elif(lDown):
             self.orientation = 'b'
+        else:
+            is_setup = False
         
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
 
