@@ -17,7 +17,10 @@ class BaseDataSource():
         
     def clear_cache(self):
         self.data = []
-        
+     
+    async def start(self):
+        self.task = asyncio.ensure_future(self._main_loop())
+     
     def get_data(self, clear_cache=False):
         if(clear_cache):
             data = self.data
@@ -39,7 +42,7 @@ class BaseDataSource():
     async def close(self):
         raise NotImplementedError() 
             
-    async def main_loop(self):
+    async def _main_loop(self):
     
         await self.loop_setup()
         self.running = True 
@@ -49,6 +52,6 @@ class BaseDataSource():
 
                 await asyncio.sleep( 1.0 / self.sample_rate )
             except (KeyboardInterrupt, SystemExit):
-                print("Here")
-                raise
+                self.running = False
+                self.close()
             

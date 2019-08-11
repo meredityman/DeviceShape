@@ -59,7 +59,7 @@ def main():
     asyncio.ensure_future(oscComunication.main_loop())
     
     for dataSource in dataSources:
-        asyncio.ensure_future(dataSource.main_loop())
+        dataSource.start())
     
     loop.run_forever()
     
