@@ -2,7 +2,13 @@ from src.ADCPi import ADCPi
 import asyncio
 from datetime import datetime
 
+import RPi.GPIO as GPIO
+
 from src.BaseDataSource import BaseDataSource
+
+RIGHT_GPIO = 23
+LEFT_GPIO  = 24
+
 
 class AdcDataSource(BaseDataSource):
 
@@ -27,6 +33,20 @@ class AdcDataSource(BaseDataSource):
             is_setup = False
         
         sample_rate = self.validate_sample_rate(sample_rate, bit_rate)
+        
+        GPIO.setup(RIGHT_GPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+        GPIO.setup(LEFT_GPIO , GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+        rDown = not GPIO.input(LEFT_GPIO)
+        lDown = not GPIO.input(RIGHT_GPIO)
+        
+        if(rDown && lDown):
+            print("ADC GPIO Error")
+            is_setup = False
+        elif(rDown):
+            self.orientation = 'f'
+        elif(lDown):
+            self.orientation = 'b'
         
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
 
@@ -53,7 +73,7 @@ class AdcDataSource(BaseDataSource):
      
     async def loop_work(self):
         if(self.is_setup):
-            data = []
+            data = [self.orientation]
             for ch in self.channels:                
                 try:
                     data.append( self.adc.read_raw(ch) )
