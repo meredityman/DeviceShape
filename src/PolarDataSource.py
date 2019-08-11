@@ -5,14 +5,14 @@ from bleak.exc import  BleakError
 from src.BaseDataSource import BaseDataSource
 
 UUID_CHARACTER_BAT_LVL      = '00002a19-0000-1000-8000-00805f9b34fb'
-UUID_CHARACTER_HR_MEASURE   = ''
+UUID_CHARACTER_HR_MEASURE   = '00002a37-0000-1000-8000-00805f9b34fb'
 
 class PolarDataSource(BaseDataSource):
 
     def __init__(self, mac_address):
         self.mac_address = mac_address
         self.connected = False
-        
+        self.connecting = False
         self.hr_latest  = -1
         self.bat_latest = -1
         self.client = None
@@ -28,12 +28,17 @@ class PolarDataSource(BaseDataSource):
             print("No mac address set for Polar")
             return
 
+        if(self.connecting == True):
+            print("Already connecting")
+            return
+
+        self.connecting = True
         try:
             print("Polar ({}): try connect...".format(self.mac_address))
             self.client = BleakClient(self.mac_address)
 
             await self.client.__aenter__()
-            await asyncio.wait_for(self.printServices(self.client), timeout=10)
+            await asyncio.wait_for(self.printServices(self.client), timeout=15)
 
             print("Polar ({}): connected".format(self.mac_address))
         except BleakError as e:
@@ -46,6 +51,8 @@ class PolarDataSource(BaseDataSource):
 
         if(self.connected):
             await self.start_notify()
+
+        self.connecting = False
 
     async def start_notify(self):
         try:

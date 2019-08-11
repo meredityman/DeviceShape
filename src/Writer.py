@@ -25,7 +25,7 @@ class Writer():
     
         with open(filePath, 'w') as f:
             for key, value in config.items():
-                f.write("{}\t{}".format(key, value))
+                f.write("{}\t{}\n".format(key, value))
     
     
     def get_status_messages(self):
