@@ -37,10 +37,8 @@ class AudioRecorder():
 
     def isButtonDown(self):
         return not GPIO.input(AUDIO_BUTTON_GPIO)
-
         
     def __del__(self):
-        
         self.audio.terminate()
      
     async def timer(self, time):
@@ -111,7 +109,6 @@ class AudioRecorder():
 
 
     async def saveAudio(self):
-        print("Saving Audio")
 
         file_name = "{}_{}.wav".format(self.name, self.start_file_time.strftime("%Y%m%d-%H%M%S"))
 
@@ -119,8 +116,9 @@ class AudioRecorder():
             print("Volume not valid for writing")
             return
 
-    
         filePath = os.path.join(self.path, file_name)
+        
+        print("Saving Audio {}".format(filePath))
         
         wf = wave.open(filePath, 'wb')
         wf.setnchannels(self.channels)

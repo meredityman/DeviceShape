@@ -28,7 +28,7 @@ def main():
         print("{}\t{}".format(key, value))
     print("---------------------------------------------")
     
-    writer = Writer(data_path)
+    writer = Writer(data_path, config)
     
     power = Power()
     

@@ -5,7 +5,7 @@ import shutil
 class Writer():
     min_space = 1e+9
     
-    def __init__(self, path):
+    def __init__(self, path, config):
         self.path = path
     
         self.status       = {
@@ -17,6 +17,16 @@ class Writer():
         }
         
         self.check_remaining_space()
+        
+        self._write_device_details(config)
+    
+    def _write_device_details(self, config):
+        filePath = os.path.join(self.path, "device.txt")
+    
+        with open(filePath, 'w') as f:
+            for key, value in config.items():
+                f.write("{}\t{}".format(key, value))
+    
     
     def get_status_messages(self):
         self.check_remaining_space()

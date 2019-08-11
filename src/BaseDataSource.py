@@ -11,9 +11,9 @@ class BaseDataSource():
         self.is_setup = is_setup        
  
         if( self.is_setup ):
-            print("{} Setup".format(self.name))
+            print("{} Initialised".format(self.name))
         else:
-            print("{} Not Setup".format(self.name))
+            print("{} Not Initialised".format(self.name))
         
     def clear_cache(self):
         self.data = []
