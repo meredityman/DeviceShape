@@ -33,29 +33,45 @@ class PolarDataSource(BaseDataSource):
             self.client = BleakClient(self.mac_address)
 
             await self.client.__aenter__()
-            await self.printServices(self.client)
+            await asyncio.wait_for(self.printServices(self.client), timeout=10)
+
+            print("Polar ({}): connected".format(self.mac_address))
+        except BleakError as e:
+            print("Polar ({}): failed to connect\n{}".format(self.mac_address, e))
+
+        try:
+            self.connected = await self.client.is_connected()
+        except:
+            pass
+
+        if(self.connected):
+            await self.start_notify()
+
+    async def start_notify(self):
+        try:
             await self.client.start_notify(UUID_CHARACTER_HR_MEASURE, self.hr_handler)
-            
-            print("Device connected: {}".format(self.is_setup))
-        except BleakError:
-            print("Device {} not found".format(self.mac_address))
+            self.is_setup = True
+        except BleakError as e:
+            print(e)
+
             
     async def loop_work(self):    
         if(self.client is None) : return
 
         try:
-           self.is_setup = await self.client.is_connected()
+           self.connected = await self.client.is_connected()
         except:
-           print("???")
+           pass
 
-        if(not self.is_setup):
+        if(not self.connected):
             await self.loop_setup() 
         else:
             self.bat_latest = await self.client.read_gatt_char(UUID_CHARACTER_BAT_LVL)
   
     def get_status_messages(self):
        return [
-            ("/{}/connected/".format(self.name), self.is_setup),
+            ("/{}/connected/".format(self.name), self.connected),
+            ("/{}/setup/".format(self.name)    , self.is_setup),
             ("/{}/hr/".format(self.name)       , self.hr_latest),
             ("/{}/battery/".format(self.name)  , self.bat_latest)        
         ]

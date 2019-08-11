@@ -72,10 +72,10 @@ def main():
 
 async def main_loop():
     global oscComunication, logging_manager, dataSources, power, audio, writer
-        
-        
-   # await audio.startRecording(10)    
-    
+    print("---------------------------------------------")
+    print("Starting main loop")
+    print("---------------------------------------------")
+
     while(True):
         
         for dataSource in dataSources:
