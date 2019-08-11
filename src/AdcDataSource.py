@@ -23,34 +23,40 @@ class AdcDataSource(BaseDataSource):
 
 
     def __init__(self, sample_rate = 10, address=0x68, address2=0x69, bit_rate=14):
-    
-        try:    
-            self.adc = ADCPi(address, address2, bit_rate)
-            is_setup = True
-            
-        except OSError:
-            print("I2C not found at address")
-            is_setup = False
-        
-        sample_rate = self.validate_sample_rate(sample_rate, bit_rate)
+        self.is_attached = False
+        i2c_valid        = False
         
         GPIO.setup(RIGHT_GPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
         GPIO.setup(LEFT_GPIO , GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         rDown = not GPIO.input(LEFT_GPIO)
         lDown = not GPIO.input(RIGHT_GPIO)
+             
         
+
         if(rDown and lDown):
             print("ADC GPIO Error")
-            is_setup = False
         elif(rDown):
             self.orientation = 'f'
+            self.is_attached = True
         elif(lDown):
             self.orientation = 'b'
-        else:
-            is_setup = False
+            self.is_attached = True
+
+        if(self.is_attached):    
+            try:    
+                self.adc = ADCPi(address, address2, bit_rate)
+                i2c_valid = True                
+            except OSError:
+                print("I2C not found at address")
+            
         
+        is_setup = self.is_attached and i2c_valid
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
+
+
+        
+        
 
 
     async def close(self):
