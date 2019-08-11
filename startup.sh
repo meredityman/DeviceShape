@@ -46,7 +46,7 @@ output=$(update_repository 2>&1)
 echo $output >> ./update.log
 
 
-python3 data_collection.py
+python3 data_collection.py > run.log
 
 echo "Finished"
 cd $dir
