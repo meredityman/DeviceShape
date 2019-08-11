@@ -14,6 +14,11 @@ Check connected devices
 sudo hcitool -i hci0 con
 ```
 
+```
+sudo hciconfig hci0 down
+sudo hciconfig hci0 up
+```
+
 
 ## Audio recording
 ```

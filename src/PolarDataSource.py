@@ -22,7 +22,12 @@ class PolarDataSource(BaseDataSource):
     def device_discovered(self, device):
         print("Discovered [%s] %s" % (device.mac_address, device.alias()))
 
-
+                
+    async def close(self):
+        if(self.client is not None):
+            print("Polar ({}): disconnecting".format(self.mac_address))
+            self.client.disconnect():
+        
     async def loop_setup(self):    
         if(self.mac_address == ""):
             print("No mac address set for Polar")

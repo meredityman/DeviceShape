@@ -34,14 +34,20 @@ class BaseDataSource():
         
     async def loop_work(self):
         raise NotImplementedError() 
+        
+                
+    async def close(self):
+        raise NotImplementedError() 
             
     async def main_loop(self):
     
         await self.loop_setup()
         self.running = True 
         while(self.running):
-        
-            await self.loop_work() 
+            try:
+                await self.loop_work() 
 
-            await asyncio.sleep( 1.0 / self.sample_rate )
+                await asyncio.sleep( 1.0 / self.sample_rate )
+            except (KeyboardInterrupt, SystemExit):
+                raise
             

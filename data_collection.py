@@ -61,13 +61,11 @@ def main():
     for dataSource in dataSources:
         asyncio.ensure_future(dataSource.main_loop())
     
-    try:    
-        loop.run_forever()        
-    except (KeyboardInterrupt, SystemExit):
-        oscComunication.close()
-        loop.close()
-
-    print("End")
+    loop.run_forever()
+    
+    print("---------------------------------------------")
+    print("Ending Program [{}]".format(datetime.now().strftime("%m/%d/%Y, %H:%M:%S")))
+    print("---------------------------------------------")
 
 
 async def main_loop():
@@ -77,16 +75,22 @@ async def main_loop():
     print("---------------------------------------------")
 
     while(True):
-        
-        for dataSource in dataSources:
-            logging_manager.write_data_source(dataSource)
-            oscComunication.queue_messages( dataSource.get_status_messages() )
+        try:
+            for dataSource in dataSources:
+                logging_manager.write_data_source(dataSource)
+                oscComunication.queue_messages( dataSource.get_status_messages() )
+                
+                
+            oscComunication.queue_messages( power.get_status_messages() )
+            oscComunication.queue_messages( writer.get_status_messages())
             
-            
-        oscComunication.queue_messages( power.get_status_messages() )
-        oscComunication.queue_messages( writer.get_status_messages())
+            await asyncio.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            for dataSource in dataSources:
+                await dataSource.close()
         
-        await asyncio.sleep(1)
+            oscComunication.close()
+            loop.close()
 
 
 
