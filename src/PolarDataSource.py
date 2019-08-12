@@ -17,6 +17,7 @@ class PolarDataSource(BaseDataSource):
         self.connected = False
         self.connecting = False
         self.hr_latest  = -1
+        self.acc_latest = []
         self.bat_latest = -1
         self.client = None
         
@@ -99,7 +100,8 @@ class PolarDataSource(BaseDataSource):
             ("/{}/connected/".format(self.name), self.connected),
             ("/{}/setup/".format(self.name)    , self.is_setup),
             ("/{}/hr/".format(self.name)       , self.hr_latest),
-            ("/{}/battery/".format(self.name)  , self.bat_latest)        
+            ("/{}/battery/".format(self.name)  , self.bat_latest),        
+            ("/{}/acc/".format(self.name)      , self.acc_latest)        
         ]
         
     def hr_handler(self, sender, data):
@@ -122,7 +124,7 @@ class PolarDataSource(BaseDataSource):
                 dat.append(z)
 
             self.data.append({"ACC" : (datetime.now(), dat) })
-
+            self.acc_latest = dat
 
     async def printServices(self, client):
         for service in client.services:
