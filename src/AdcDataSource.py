@@ -25,7 +25,7 @@ class AdcDataSource(BaseDataSource):
     def __init__(self, sample_rate = 10, address=0x68, address2=0x69, bit_rate=14):
         self.is_attached = False
         i2c_valid        = False
-        
+        self.adc_latest  = []
         GPIO.setup(RIGHT_GPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
         GPIO.setup(LEFT_GPIO , GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
@@ -54,10 +54,11 @@ class AdcDataSource(BaseDataSource):
         is_setup = self.is_attached and i2c_valid
         super(AdcDataSource, self).__init__("ADC", sample_rate, is_setup)
 
-
-        
-        
-
+    def get_status_messages(self):
+        return [
+            ("/{}/connected/".format(self.name), self.is_setup),
+            ("/{}/adc/".format(self.name), self.adc_latest)
+        ]
 
     async def close(self):
         pass
@@ -85,6 +86,7 @@ class AdcDataSource(BaseDataSource):
             for ch in self.channels:                
                 try:
                     data.append( self.adc.read_raw(ch) )
+
                 except TimeoutError:
                     pass
             
@@ -96,3 +98,4 @@ class AdcDataSource(BaseDataSource):
             #print(dstr, end='\r')
             
             self.data.append({"ADC" : (datetime.now(), data) }) 
+            self.adc_latest = data

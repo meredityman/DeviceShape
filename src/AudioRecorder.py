@@ -39,6 +39,9 @@ class AudioRecorder():
 
     def isButtonDown(self):
         return not GPIO.input(AUDIO_BUTTON_GPIO)
+
+    def get_status_messages(self):
+        return [("/{}/recording/".format(self.name), self.recording)]
         
     def __del__(self):
         self.audio.terminate()
