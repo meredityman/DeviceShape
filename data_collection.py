@@ -84,6 +84,7 @@ async def main_loop():
                 
             oscComunication.queue_messages( power.get_status_messages() )
             oscComunication.queue_messages( writer.get_status_messages())
+            oscComunication.queue_messages( audio.get_status_messages())
             
             await asyncio.sleep(1)
         except (KeyboardInterrupt, SystemExit):
