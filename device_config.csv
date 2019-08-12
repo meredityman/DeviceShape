@@ -1,11 +1,11 @@
 ID,  Color,       Name,        Gender,  MAC Address,        IP,           PolarMAC
 1,   Dark Blue,   Diana,       Female,  B8-27-EB-B2-AA-07, 192.168.0.101, FF:90:BF:64:57:38
-2,   Grey,        Kate,        Female,  B8-27-EB-82-46-AB, 192.168.0.102, E6:D6:C0:5E:95:13
+2,   Grey,        Jei,         Female,  B8-27-EB-82-46-AB, 192.168.0.102, E6:D6:C0:5E:95:13
 3,   Pink,        Dimitri,     Male,    B8-27-EB-23-8B-AC, 192.168.0.103, DD:7B:35:88:02:01
-4,   Green,       Joanna,      Female,  B8-27-EB-F8-C1-B1, 192.168.0.104, EA:E5:02:B7:BA:74
-5,   Light Blue,  Sarai,       Female,    B8-27-EB-F1-8F-D0, 192.168.0.105, FF:07:02:E4:BD:3A
+4,   Green,       Kate,        Female,  B8-27-EB-F8-C1-B1, 192.168.0.104, EA:E5:02:B7:BA:74
+5,   Light Blue,  Sarai,       Female,  B8-27-EB-F1-8F-D0, 192.168.0.105, FF:07:02:E4:BD:3A
 6,   Yellow,      Luke,        Male,    B8-27-EB-0C-A9-BE, 192.168.0.106, E8:6E:CA:B5:6B:90
-7,   Light Green,,             Male,    B8-27-EB-9B-00-D8, 192.168.0.107, C5:C4:ED:FC:76:55
-8,,  Red          Peter,       Male,,
-9,,  Purple       Jei,         Female,,
+7,   Light Green, Peter,       Male,    B8-27-EB-9B-00-D8, 192.168.0.107, C5:C4:ED:FC:76:55
+8,,  Red          Regis,       Male,,
+9,,  Purple       Joanna,      Female,,
 10,, Orange       Gabriel,     Male,,
