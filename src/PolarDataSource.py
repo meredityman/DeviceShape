@@ -116,7 +116,7 @@ class PolarDataSource(BaseDataSource):
                 x = int.from_bytes(frames[i:i+2]  , byteorder='little', signed=True)
                 y = int.from_bytes(frames[i+2:i+4], byteorder='little', signed=True)
                 z = int.from_bytes(frames[i+4:i+6], byteorder='little', signed=True)
-                print("{}, {}, {}".format(x, y, z))
+                #print("{}, {}, {}".format(x, y, z))
                 dat.append(x)
                 dat.append(y)
                 dat.append(z)
