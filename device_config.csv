@@ -6,7 +6,7 @@ ID,  Color,       Name,        Gender,  MAC Address,        IP,           PolarM
 5,   Light Blue,  Sarai,       Female,  B8-27-EB-F1-8F-D0, 192.168.0.105, FF:07:02:E4:BD:3A
 6,   Yellow,      Luke,        Male,    B8-27-EB-0C-A9-BE, 192.168.0.106, E8:6E:CA:B5:6B:90
 7,   Light Green, Peter,       Male,    B8-27-EB-9B-00-D8, 192.168.0.107, C5:C4:ED:FC:76:55
-8,,  Purple,      Regis,       Male,,   B8-27-EB-35-76-E3, 192.168.0.108,
-9,,  Red,         Joanna,      Female,, B8-27-EB-3E-ED-E0, 192.168.0.109,
+8,,  Purple,      Regis,       Male,,   B8-27-EB-35-76-E3, 192.168.0.108, C9:17:95:6F:60:44
+9,,  Red,         Joanna,      Female,, B8-27-EB-3E-ED-E0, 192.168.0.109, D3:87:10:23:E8:F4
 10,, Orange       Gabriel,     Male,,
 
