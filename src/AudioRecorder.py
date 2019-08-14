@@ -18,7 +18,7 @@ class AudioRecorder():
     input_device  = 1
 
     file_split_time = 30
-    max_record_time = 600
+    max_record_time = 7600
  
     def __init__(self, writer):
         self.name = "Audio"
@@ -92,19 +92,12 @@ class AudioRecorder():
 
         
     async def main_loop(self):
-        self.running = True 
+        self.running = True
+
+        await self.startRecording()
+ 
         while(self.running):
-        
-            self.buttonDown = self.isButtonDown()
-
-            if(self.buttonDown and not self.lastButtonDown):
-                if(self.recording):
-                    await self.stopRecording()
-                else:
-                    await self.startRecording()
-
-            self.lastButtonDown = self.buttonDown
-
+       
             if(self.recording ):
                 data = self.stream.read(self.chunk, exception_on_overflow = False)
                 self.frames.append(data)
